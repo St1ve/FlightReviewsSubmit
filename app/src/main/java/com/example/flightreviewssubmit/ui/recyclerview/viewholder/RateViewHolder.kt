@@ -2,13 +2,13 @@ package com.example.flightreviewssubmit.ui.recyclerview.viewholder
 
 import android.view.View
 import android.widget.RatingBar
-import android.widget.Toast
 import androidx.appcompat.widget.AppCompatRatingBar
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flightreviewssubmit.R
 import com.example.flightreviewssubmit.data.RateFlightData
 import com.example.flightreviewssubmit.ui.recyclerview.adapter.FlightSubmitAdapter
+import com.example.flightreviewssubmit.util.RatingRange
 import java.lang.UnsupportedOperationException
 
 sealed class RateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -21,6 +21,13 @@ sealed class RateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
             if (data !is RateFlightData.RateCrowd)
                 throw UnsupportedOperationException("Unsupported data. " +
                         "Data have to be type: RateFlightData.RateFlight")
+
+            crowdRateBar.rating = data.rating.value.toFloat()
+
+            crowdRateBar.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener { _, rating, _ ->
+                data.rating.value = rating.toInt()
+                action.setRating(data)
+            }
         }
     }
 
@@ -34,9 +41,16 @@ sealed class RateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
                 throw UnsupportedOperationException("Unsupported data." +
                         " Data have to be type: RateFlightData.RateFlight")
 
-            headerTextView.text = data.header
+            headerTextView.text = itemView.context.getString(
+                R.string.rate_flight_header,
+                data.header
+            )
+
+            rateBar.rating = data.rating.value.toFloat()
+
             rateBar.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener { _, rating, _ ->
-                action.setRating(rating.toInt())
+                data.rating.value = rating.toInt()
+                action.setRating(data)
             }
         }
     }

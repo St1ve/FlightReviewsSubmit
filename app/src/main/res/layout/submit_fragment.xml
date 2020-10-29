@@ -23,35 +23,37 @@
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_collapseMode="parallax"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                app:layout_collapseMode="parallax">
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:layout_marginTop="100dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_flight_60"
-                    android:layout_marginTop="100dp"/>
+                    android:src="@drawable/ic_flight_60" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/small_margin"
                     android:gravity="center"
-                    android:textSize="26sp"
+                    android:text="How do you rate the overall flight experience?"
                     android:textColor="@color/white"
-                    android:text="How do you rate the overall flight experience?"/>
+                    android:textSize="26sp" />
 
                 <androidx.appcompat.widget.AppCompatRatingBar
+                    android:id="@+id/average_rate_bar"
                     android:layout_width="wrap_content"
                     android:layout_height="55dp"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/small_margin"
+                    android:isIndicator="true"
                     android:max="5"
                     android:numStars="5"
                     android:stepSize="1"
-                    android:layout_gravity="center"
-                    android:theme="@style/RatingBarStars"
-                    android:layout_marginBottom="@dimen/small_margin"/>
+                    android:theme="@style/RatingBarStars" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -68,6 +70,7 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:overScrollMode="never"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -80,9 +83,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                android:overScrollMode="never"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:listitem="@layout/item_rate_crowded"
-                tools:itemCount="4"/>
+                tools:itemCount="4"
+                tools:listitem="@layout/item_rate_crowded" />
 
             <androidx.appcompat.widget.AppCompatCheckBox
                 android:layout_width="wrap_content"

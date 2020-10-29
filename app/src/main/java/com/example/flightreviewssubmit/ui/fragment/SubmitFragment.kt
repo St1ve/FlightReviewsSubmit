@@ -1,30 +1,28 @@
 package com.example.flightreviewssubmit.ui.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RatingBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flightreviewssubmit.R
 import com.example.flightreviewssubmit.data.RateFlightData
 import com.example.flightreviewssubmit.ui.recyclerview.adapter.FlightSubmitAdapter
-import com.example.flightreviewssubmit.util.RatingRange
 import com.example.flightreviewssubmit.viewmodel.SubmitViewModel
-import java.lang.UnsupportedOperationException
 
 class SubmitFragment : Fragment() {
 
-    companion object {
-        fun newInstance() = SubmitFragment()
-    }
-
-    private lateinit var viewModel: SubmitViewModel
+    private lateinit var submitViewModel: SubmitViewModel
 
     private lateinit var ratingRecyclerView: RecyclerView
+    private lateinit var submitFlightAdapter: FlightSubmitAdapter
+    private lateinit var avrRateBar: RatingBar
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,36 +34,34 @@ class SubmitFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        ratingRecyclerView = view.findViewById(R.id.rating_recycler_view)
-        initRecyclerView()
-    }
+        submitViewModel = ViewModelProvider(this).get(SubmitViewModel::class.java)
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProvider(this).get(SubmitViewModel::class.java)
+        ratingRecyclerView = view.findViewById(R.id.rating_recycler_view)
+        avrRateBar = view.findViewById(R.id.average_rate_bar)
+
+        initRecyclerView()
+
+        submitViewModel.avrRating.observe(viewLifecycleOwner, Observer {
+            avrRateBar.rating = it.toFloat()
+            Log.d("Test", "avr:$it")
+        })
     }
 
     private fun initRecyclerView() {
-        val ratings = listOf<RateFlightData>(
-            RateFlightData.RateCrowd(),
-            RateFlightData.RateFlight("How do you rate the aircraft"),
-            RateFlightData.RateFlight("How do you rate the seats"),
-            RateFlightData.RateFlight("How do you rate the crew"),
-            RateFlightData.RateFlight("How do you rate the food")
-        )
-
-        val adapter = FlightSubmitAdapter(
+        submitFlightAdapter = FlightSubmitAdapter(
             LayoutInflater.from(context),
-            ratings,
             object : FlightSubmitAdapter.IRateActionListener {
-                override fun setRating(rating: RatingRange) {
-
-                    Toast.makeText(context, "$rating", Toast.LENGTH_SHORT).show()
+                override fun setRating(item: RateFlightData) {
+                    submitViewModel.setRating(item)
+                    Toast.makeText(context, "${item.rating.value}", Toast.LENGTH_SHORT).show()
                 }
             }
         )
 
-        ratingRecyclerView.adapter = adapter
-    }
+        submitViewModel.lstRatings.observe(viewLifecycleOwner, Observer { lstRating ->
+            submitFlightAdapter.update(lstRating)
+        })
 
+        ratingRecyclerView.adapter = submitFlightAdapter
+    }
 }

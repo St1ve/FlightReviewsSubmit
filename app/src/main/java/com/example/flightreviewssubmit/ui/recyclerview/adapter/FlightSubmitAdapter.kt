@@ -10,9 +10,15 @@ import com.example.flightreviewssubmit.util.RatingRange
 
 class FlightSubmitAdapter(
     private val inflater: LayoutInflater,
-    private val lstRatings: List<RateFlightData>,
     private val rateListActionListener: IRateActionListener
 ) : RecyclerView.Adapter<RateViewHolder>() {
+
+    private var lstRatings: List<RateFlightData> = emptyList()
+
+    fun update(newRatings: List<RateFlightData>) {
+        lstRatings = newRatings
+        notifyDataSetChanged()
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RateViewHolder {
         return when (viewType) {
@@ -50,6 +56,6 @@ class FlightSubmitAdapter(
     }
 
     interface IRateActionListener {
-        fun setRating(rating: RatingRange)
+        fun setRating(item: RateFlightData)
     }
 }

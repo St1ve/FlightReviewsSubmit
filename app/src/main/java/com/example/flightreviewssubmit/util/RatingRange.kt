@@ -3,17 +3,10 @@ package com.example.flightreviewssubmit.util
 import java.lang.UnsupportedOperationException
 
 class RatingRange{
-    constructor(rating: Int) {
-        if (rating < 0 || rating > 5)
-            throw UnsupportedOperationException("Rating must be > 0 and < 5")
-
-        this.rating = rating
-    }
-
-    var rating: Int
+    var value: Int = 0
         set(value) {
-            if (rating < 0 || rating > 5)
-                throw UnsupportedOperationException("Rating must be > 0 and < 5")
+            if (value < 1 || value > 6)
+                throw UnsupportedOperationException("Rating must be > 1 and < 6")
 
             field = value
         }
