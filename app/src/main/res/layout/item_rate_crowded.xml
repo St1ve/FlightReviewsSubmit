@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin"
+        android:text="How crowded was the flight"
+        android:textSize="24sp" />
+
+    <androidx.appcompat.widget.AppCompatRatingBar
+        android:id="@+id/crowd_rate_bar"
+        style="@style/RatingCrowdBarStars"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/small_margin"
+        android:layout_marginBottom="@dimen/small_margin"
+        android:max="5"
+        android:numStars="5"
+        android:stepSize="1" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>
