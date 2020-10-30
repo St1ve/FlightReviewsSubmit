@@ -22,10 +22,12 @@ sealed class RateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
                 throw UnsupportedOperationException("Unsupported data. " +
                         "Data have to be type: RateFlightData.RateFlight")
 
-            crowdRateBar.rating = data.rating.value.toFloat()
+            // -1 cause rating range(1,6)
+            crowdRateBar.rating = data.rating.value.toFloat() - 1
 
             crowdRateBar.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener { _, rating, _ ->
-                data.rating.value = rating.toInt()
+                // +1 cause rating range(1,6)
+                data.rating.value = rating.toInt() + 1
                 action.setRating(data)
             }
         }
@@ -46,10 +48,12 @@ sealed class RateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
                 data.header
             )
 
-            rateBar.rating = data.rating.value.toFloat()
+            // -1 cause rating range(1,6)
+            rateBar.rating = data.rating.value.toFloat() - 1
 
             rateBar.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener { _, rating, _ ->
-                data.rating.value = rating.toInt()
+                // +1 cause rating range(1,6)
+                data.rating.value = rating.toInt() + 1
                 action.setRating(data)
             }
         }

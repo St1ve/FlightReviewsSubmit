@@ -14,6 +14,13 @@ class SubmitViewModel : ViewModel() {
         return _avrRating
     }
 
+    private val _food: MutableLiveData<Boolean> = MutableLiveData(false)
+
+    val isFood: LiveData<Boolean>
+    get() {
+        return _food
+    }
+
     private val _lstRatings: MutableLiveData<List<RateFlightData>> = MutableLiveData(
         listOf<RateFlightData>(
             RateFlightData.RateCrowd(),
@@ -32,6 +39,10 @@ class SubmitViewModel : ViewModel() {
         if (positionEl != null)
             _lstRatings.value?.get(positionEl)?.rating = itemRateFlightData.rating
         countAvrRating()
+    }
+
+    fun setIsFood(food: Boolean) {
+        _food.value = food
     }
 
     private fun countAvrRating() {

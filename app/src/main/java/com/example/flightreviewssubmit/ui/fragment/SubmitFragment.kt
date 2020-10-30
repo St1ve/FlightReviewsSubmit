@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.RatingBar
+import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -25,6 +26,7 @@ class SubmitFragment : Fragment() {
     private lateinit var ratingRecyclerView: RecyclerView
     private lateinit var submitFlightAdapter: FlightSubmitAdapter
     private lateinit var avrRateBar: RatingBar
+    private lateinit var foodCheckBox: AppCompatCheckBox
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -42,6 +44,7 @@ class SubmitFragment : Fragment() {
         logoToolbarImage = view.findViewById<ImageView>(R.id.logo_toolbar_image)
         ratingRecyclerView = view.findViewById(R.id.rating_recycler_view)
         avrRateBar = view.findViewById(R.id.average_rate_bar)
+        foodCheckBox = view.findViewById(R.id.food_check_box)
 
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener {
                 appBarLayout,
@@ -55,7 +58,16 @@ class SubmitFragment : Fragment() {
         initRecyclerView()
 
         submitViewModel.avrRating.observe(viewLifecycleOwner, Observer {
-            avrRateBar.rating = it
+            // -1 cause rating range(1,6)
+            avrRateBar.rating = it - 1
+        })
+
+        foodCheckBox.setOnClickListener {
+            submitViewModel.setIsFood(foodCheckBox.isChecked)
+        }
+
+        submitViewModel.isFood.observe(viewLifecycleOwner, Observer {
+            foodCheckBox.isChecked = it
         })
     }
 
