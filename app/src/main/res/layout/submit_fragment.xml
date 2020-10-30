@@ -101,8 +101,8 @@
                 android:overScrollMode="never"
                 android:layout_marginTop="@dimen/small_margin"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="1"
-                tools:listitem="@layout/item_rate_crowded" />
+                tools:itemCount="4"
+                tools:listitem="@layout/item_rate_flight" />
 
             <androidx.appcompat.widget.AppCompatCheckBox
                 android:id="@+id/food_check_box"
@@ -122,7 +122,7 @@
                 android:padding="3dp"/>
 
             <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/comments_edit_text"
+                android:id="@+id/feedback_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/submit_hint_comment"

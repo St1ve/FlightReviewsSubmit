@@ -8,17 +8,21 @@ import com.example.flightreviewssubmit.data.RateFlightData
 class SubmitViewModel : ViewModel() {
 
     private val _avrRating: MutableLiveData<Float> = MutableLiveData(0.0F)
-
     val avrRating: LiveData<Float>
         get() {
         return _avrRating
     }
 
     private val _food: MutableLiveData<Boolean> = MutableLiveData(false)
-
     val isFood: LiveData<Boolean>
     get() {
         return _food
+    }
+
+    private val _feedback: MutableLiveData<String> = MutableLiveData<String>("")
+    val feedback: LiveData<String>
+    get() {
+        return _feedback
     }
 
     private val _lstRatings: MutableLiveData<List<RateFlightData>> = MutableLiveData(
@@ -30,7 +34,6 @@ class SubmitViewModel : ViewModel() {
             RateFlightData.RateFlight("food")
         )
     )
-
     val lstRatings: LiveData<List<RateFlightData>>
         get() = _lstRatings
 
@@ -43,6 +46,10 @@ class SubmitViewModel : ViewModel() {
 
     fun setIsFood(food: Boolean) {
         _food.value = food
+    }
+
+    fun setFeedback(feedback: String) {
+        _feedback.value = feedback
     }
 
     private fun countAvrRating() {
