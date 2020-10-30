@@ -6,4 +6,5 @@
     <string name="submit_title_comment">Leave any feedback</string>
     <string name="submit_hint_comment">Share your experience. How was the seat? How was the food? Any tips?</string>
     <string name="submit_button">Submit</string>
+    <string name="crowded_header">How crowded was the flight</string>
 </resources>

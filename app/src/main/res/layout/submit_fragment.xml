@@ -120,11 +120,13 @@
                 android:textStyle="bold"
                 android:padding="3dp"/>
 
-            <EditText
+            <androidx.appcompat.widget.AppCompatEditText
+                android:id="@+id/comments_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/submit_hint_comment"
                 android:importantForAutofill="no"
+                android:gravity="start"
                 android:inputType="none"/>
 
             <androidx.appcompat.widget.AppCompatButton
