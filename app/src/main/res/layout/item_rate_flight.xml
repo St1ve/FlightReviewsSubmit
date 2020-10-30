@@ -8,16 +8,18 @@
         android:id="@+id/header_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/small_margin"
+        android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginBottom="5dp"
         android:text="How crowded was the flight"
-        android:textSize="24sp" />
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:textStyle="bold"/>
 
     <androidx.appcompat.widget.AppCompatRatingBar
         android:id="@+id/rate_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/small_margin"
-        android:layout_marginBottom="@dimen/small_margin"
+        android:layout_marginBottom="0dp"
         android:max="5"
         android:numStars="5"
         android:stepSize="1"

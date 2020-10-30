@@ -1,12 +1,11 @@
 package com.example.flightreviewssubmit.ui.fragment
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.RatingBar
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -15,11 +14,14 @@ import com.example.flightreviewssubmit.R
 import com.example.flightreviewssubmit.data.RateFlightData
 import com.example.flightreviewssubmit.ui.recyclerview.adapter.FlightSubmitAdapter
 import com.example.flightreviewssubmit.viewmodel.SubmitViewModel
+import com.google.android.material.appbar.AppBarLayout
 
 class SubmitFragment : Fragment() {
 
     private lateinit var submitViewModel: SubmitViewModel
 
+    private lateinit var appBarLayout: AppBarLayout
+    private lateinit var logoToolbarImage: ImageView
     private lateinit var ratingRecyclerView: RecyclerView
     private lateinit var submitFlightAdapter: FlightSubmitAdapter
     private lateinit var avrRateBar: RatingBar
@@ -36,14 +38,24 @@ class SubmitFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         submitViewModel = ViewModelProvider(this).get(SubmitViewModel::class.java)
 
+        appBarLayout = view.findViewById(R.id.app_bar_layout)
+        logoToolbarImage = view.findViewById<ImageView>(R.id.logo_toolbar_image)
         ratingRecyclerView = view.findViewById(R.id.rating_recycler_view)
         avrRateBar = view.findViewById(R.id.average_rate_bar)
+
+        appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener {
+                appBarLayout,
+                verticalOffset ->
+                if (appBarLayout.totalScrollRange + verticalOffset == 0)
+                    logoToolbarImage.visibility = View.VISIBLE
+                else
+                    logoToolbarImage.visibility = View.GONE
+        })
 
         initRecyclerView()
 
         submitViewModel.avrRating.observe(viewLifecycleOwner, Observer {
-            avrRateBar.rating = it.toFloat()
-            Log.d("Test", "avr:$it")
+            avrRateBar.rating = it
         })
     }
 
@@ -53,7 +65,6 @@ class SubmitFragment : Fragment() {
             object : FlightSubmitAdapter.IRateActionListener {
                 override fun setRating(item: RateFlightData) {
                     submitViewModel.setRating(item)
-                    Toast.makeText(context, "${item.rating.value}", Toast.LENGTH_SHORT).show()
                 }
             }
         )

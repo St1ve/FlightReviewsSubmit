@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">FlightReviewsSubmit</string>
     <string name="rate_flight_header">How do you rate the %1$s?</string>
+    <string name="submit_header">How do you rate the overall flight experience?</string>
+    <string name="submit_check_box">There were no food</string>
+    <string name="submit_title_comment">Leave any feedback</string>
+    <string name="submit_hint_comment">Share your experience. How was the seat? How was the food? Any tips?</string>
+    <string name="submit_button">Submit</string>
 </resources>

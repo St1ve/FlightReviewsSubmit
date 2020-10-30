@@ -8,8 +8,10 @@
     tools:context=".ui.fragment.SubmitFragment">
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/submit_topbar_shape"
         android:fitsSystemWindows="false"
         android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
 
@@ -32,16 +34,17 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="100dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_flight_60" />
+                    android:src="@drawable/ic_flight_60"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/small_margin"
                     android:gravity="center"
-                    android:text="How do you rate the overall flight experience?"
+                    android:text="@string/submit_header"
                     android:textColor="@color/white"
-                    android:textSize="26sp" />
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
 
                 <androidx.appcompat.widget.AppCompatRatingBar
                     android:id="@+id/average_rate_bar"
@@ -57,13 +60,23 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <androidx.appcompat.widget.Toolbar
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:layout_collapseMode="pin"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
         </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:layout_scrollFlags="scroll|snap|enterAlways">
+
+            <ImageView
+                android:id="@+id/logo_toolbar_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_flight_60"
+                android:visibility="gone" />
+
+        </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -76,6 +89,8 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/small_margin"
+            android:layout_marginEnd="@dimen/small_margin"
             android:orientation="vertical">
 
             <androidx.recyclerview.widget.RecyclerView
@@ -84,29 +99,46 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:overScrollMode="never"
+                android:layout_marginTop="@dimen/small_margin"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                tools:itemCount="4"
+                tools:itemCount="1"
                 tools:listitem="@layout/item_rate_crowded" />
 
             <androidx.appcompat.widget.AppCompatCheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="There were no food" />
+                android:button="@drawable/checkbox_selector"
+                android:text="@string/submit_check_box" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Leave any feedback" />
+                android:layout_marginTop="@dimen/small_margin"
+                android:text="@string/submit_title_comment"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:padding="3dp"/>
 
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Share your experience. How was the seat? How was the food? Any tips?" />
+                android:hint="@string/submit_hint_comment"
+                android:importantForAutofill="no"
+                android:inputType="none"/>
 
             <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/submit_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Submit" />
+                android:layout_marginTop="@dimen/small_margin"
+                android:background="@drawable/submit_button_shape"
+                android:layout_marginBottom="@dimen/small_margin"
+                android:text="@string/submit_button"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

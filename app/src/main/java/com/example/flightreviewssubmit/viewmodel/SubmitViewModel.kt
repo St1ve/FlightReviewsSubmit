@@ -4,13 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.flightreviewssubmit.data.RateFlightData
-import kotlin.math.roundToInt
 
 class SubmitViewModel : ViewModel() {
 
-    private val _avrRating: MutableLiveData<Int> = MutableLiveData(0)
+    private val _avrRating: MutableLiveData<Float> = MutableLiveData(0.0F)
 
-    val avrRating: LiveData<Int>
+    val avrRating: LiveData<Float>
         get() {
         return _avrRating
     }
@@ -42,7 +41,7 @@ class SubmitViewModel : ViewModel() {
             for(item in lstRatings){
                 sum += item.rating.value.toFloat()
             }
-            val avr: Int = (sum / lstRatings.size).roundToInt()
+            val avr: Float = (sum / lstRatings.size)
             _avrRating.postValue(avr)
         }
     }
