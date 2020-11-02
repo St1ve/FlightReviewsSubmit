@@ -34,7 +34,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="100dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/ic_flight_60"/>
+                    android:src="@drawable/ic_flight_60" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="match_parent"
@@ -45,6 +45,23 @@
                     android:textColor="@color/white"
                     android:textSize="26sp"
                     android:textStyle="bold" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="LH 3495 26 Mar 2019"
+                    android:textColor="@color/grey"
+                    android:textSize="18sp" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="SFO CDG"
+                    android:textColor="@color/grey"
+                    android:layout_marginBottom="24dp"
+                    android:textSize="18sp" />
 
                 <androidx.appcompat.widget.AppCompatRatingBar
                     android:id="@+id/average_rate_bar"
@@ -97,9 +114,9 @@
                 android:id="@+id/rating_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_margin"
                 android:orientation="vertical"
                 android:overScrollMode="never"
-                android:layout_marginTop="@dimen/small_margin"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:itemCount="4"
                 tools:listitem="@layout/item_rate_flight" />
@@ -115,28 +132,28 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/small_margin"
+                android:padding="3dp"
                 android:text="@string/submit_title_comment"
-                android:textSize="18sp"
                 android:textColor="@color/black"
-                android:textStyle="bold"
-                android:padding="3dp"/>
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <androidx.appcompat.widget.AppCompatEditText
                 android:id="@+id/feedback_edit_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="start"
                 android:hint="@string/submit_hint_comment"
                 android:importantForAutofill="no"
-                android:gravity="start"
-                android:inputType="none"/>
+                android:inputType="none" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/submit_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/small_margin"
-                android:background="@drawable/submit_button_shape"
                 android:layout_marginBottom="@dimen/small_margin"
+                android:background="@drawable/submit_button_shape"
                 android:text="@string/submit_button"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
