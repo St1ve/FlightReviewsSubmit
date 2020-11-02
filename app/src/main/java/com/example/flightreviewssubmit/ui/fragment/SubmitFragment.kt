@@ -1,14 +1,17 @@
 package com.example.flightreviewssubmit.ui.fragment
 
+import android.app.Activity
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.RatingBar
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.core.content.ContextCompat
+import androidx.core.view.iterator
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -32,6 +35,7 @@ class SubmitFragment : Fragment() {
     private lateinit var foodCheckBox: AppCompatCheckBox
     private lateinit var feedbackEditText: AppCompatEditText
 
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,6 +46,8 @@ class SubmitFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupKeyBoard(view)
+
         submitViewModel = ViewModelProvider(this).get(SubmitViewModel::class.java)
 
         appBarLayout = view.findViewById(R.id.app_bar_layout)
@@ -105,5 +111,33 @@ class SubmitFragment : Fragment() {
         })
 
         ratingRecyclerView.adapter = submitFlightAdapter
+    }
+
+
+    /**
+     * Setting up keyboard
+     * If user will click on view, keyboard will hide
+     */
+    private fun setupKeyBoard(view: View) {
+
+        if (view !is AppCompatEditText) {
+            view.setOnTouchListener { _, _ ->
+                activity?.hideSoftKeyboard()
+                false
+            }
+        }
+
+        if (view is ViewGroup) {
+            for (el in view) {
+                setupKeyBoard(el)
+            }
+        }
+    }
+
+    private fun Activity.hideSoftKeyboard() {
+        currentFocus?.let {
+            val inputMethodManager = ContextCompat.getSystemService(this, InputMethodManager::class.java)!!
+            inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0)
+        }
     }
 }
