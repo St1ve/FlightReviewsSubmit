@@ -7,4 +7,6 @@
     <string name="submit_hint_comment">Share your experience. How was the seat? How was the food? Any tips?</string>
     <string name="submit_button">Submit</string>
     <string name="crowded_header">How crowded was the flight</string>
+    <string name="info_flight_race_date">LH 3495 &#8226; 26 Mar 2019</string>
+    <string name="info_flight_from_to">SFO &#10132; CDG</string>
 </resources>

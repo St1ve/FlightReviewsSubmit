@@ -50,7 +50,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="LH 3495 26 Mar 2019"
+                    android:text="@string/info_flight_race_date"
                     android:textColor="@color/grey"
                     android:textSize="18sp" />
 
@@ -58,7 +58,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="SFO CDG"
+                    android:text="@string/info_flight_from_to"
                     android:textColor="@color/grey"
                     android:layout_marginBottom="24dp"
                     android:textSize="18sp" />
