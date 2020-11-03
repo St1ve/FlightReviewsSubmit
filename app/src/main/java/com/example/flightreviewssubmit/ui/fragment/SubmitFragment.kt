@@ -6,10 +6,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.ImageView
 import android.widget.RatingBar
+import android.widget.TextView
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatEditText
+import androidx.appcompat.widget.AppCompatImageButton
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.iterator
 import androidx.core.widget.doOnTextChanged
@@ -22,18 +24,23 @@ import com.example.flightreviewssubmit.data.RateFlightData
 import com.example.flightreviewssubmit.ui.recyclerview.adapter.FlightSubmitAdapter
 import com.example.flightreviewssubmit.viewmodel.SubmitViewModel
 import com.google.android.material.appbar.AppBarLayout
+import kotlin.system.exitProcess
 
 class SubmitFragment : Fragment() {
 
     private lateinit var submitViewModel: SubmitViewModel
 
     private lateinit var appBarLayout: AppBarLayout
-    private lateinit var logoToolbarImage: ImageView
+    private lateinit var exitImageButton: AppCompatImageButton
     private lateinit var ratingRecyclerView: RecyclerView
     private lateinit var submitFlightAdapter: FlightSubmitAdapter
     private lateinit var avrRateBar: RatingBar
     private lateinit var foodCheckBox: AppCompatCheckBox
     private lateinit var feedbackEditText: AppCompatEditText
+
+    private lateinit var mainHeaderSubmitTextView: TextView
+    private lateinit var infoRaceDateSubmitTextView: TextView
+    private lateinit var infoDirectionSubmitTextView: TextView
 
 
     override fun onCreateView(
@@ -51,9 +58,12 @@ class SubmitFragment : Fragment() {
         submitViewModel = ViewModelProvider(this).get(SubmitViewModel::class.java)
 
         appBarLayout = view.findViewById(R.id.app_bar_layout)
-        logoToolbarImage = view.findViewById(R.id.logo_toolbar_image)
-        ratingRecyclerView = view.findViewById(R.id.rating_recycler_view)
+        exitImageButton = view.findViewById(R.id.exit_submit_button)
+        mainHeaderSubmitTextView = view.findViewById(R.id.main_header_submit_text_view)
+        infoRaceDateSubmitTextView = view.findViewById(R.id.info_race_date_submit_text_view)
+        infoDirectionSubmitTextView = view.findViewById(R.id.info_direction_submit_text_view)
         avrRateBar = view.findViewById(R.id.average_rate_bar)
+        ratingRecyclerView = view.findViewById(R.id.rating_recycler_view)
         foodCheckBox = view.findViewById(R.id.food_check_box)
         feedbackEditText = view.findViewById(R.id.feedback_edit_text)
 
@@ -80,12 +90,25 @@ class SubmitFragment : Fragment() {
     private fun initListeners() {
         appBarLayout.addOnOffsetChangedListener(
             AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-                if (appBarLayout.totalScrollRange + verticalOffset == 0)
-                    logoToolbarImage.visibility = View.VISIBLE
-                else
-                    logoToolbarImage.visibility = View.GONE
+                if (appBarLayout.totalScrollRange + verticalOffset == 0) {
+                    mainHeaderSubmitTextView.visibility = View.GONE
+                    infoRaceDateSubmitTextView.visibility = View.GONE
+                    infoDirectionSubmitTextView.visibility = View.GONE
+                    avrRateBar.visibility = View.GONE
+                }
+                else {
+                    mainHeaderSubmitTextView.visibility = View.VISIBLE
+                    infoRaceDateSubmitTextView.visibility = View.VISIBLE
+                    infoDirectionSubmitTextView.visibility = View.VISIBLE
+                    avrRateBar.visibility = View.VISIBLE
+                }
             }
         )
+
+        exitImageButton.setOnClickListener {
+            activity?.finish()
+            exitProcess(0)
+        }
 
         foodCheckBox.setOnClickListener {
             submitViewModel.setIsFood(foodCheckBox.isChecked)
@@ -112,7 +135,6 @@ class SubmitFragment : Fragment() {
 
         ratingRecyclerView.adapter = submitFlightAdapter
     }
-
 
     /**
      * Setting up keyboard
