@@ -11,6 +11,6 @@
         android:right="0dp"
         android:top="0dp" />
 
-    <solid android:color="?attr/colorPrimary" />
+    <solid android:color="@color/dark_blue" />
 
 </shape>

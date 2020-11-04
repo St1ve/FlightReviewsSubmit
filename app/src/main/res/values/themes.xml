@@ -25,4 +25,9 @@
         <item name="android:progressDrawable">@drawable/rating_bar_crowd</item>
     </style>
 
+    <style name="SubmitActionBar" parent="Base.Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/dark_blue</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
 </resources>
