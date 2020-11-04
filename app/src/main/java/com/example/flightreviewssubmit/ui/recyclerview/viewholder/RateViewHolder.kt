@@ -8,19 +8,24 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.flightreviewssubmit.R
 import com.example.flightreviewssubmit.data.RateFlightData
 import com.example.flightreviewssubmit.ui.recyclerview.adapter.FlightSubmitAdapter
-import com.example.flightreviewssubmit.util.RatingRange
 import java.lang.UnsupportedOperationException
 
 sealed class RateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    abstract fun bind(data: RateFlightData, action: FlightSubmitAdapter.IRateActionListener)
+    abstract fun bind(data: RateFlightData, action: FlightSubmitAdapter.IRateActionListener, isActive: Boolean)
 
     class RateCrowdedViewHolder(itemView: View) : RateViewHolder(itemView){
         private val crowdRateBar: AppCompatRatingBar = itemView.findViewById(R.id.crowd_rate_bar)
 
-        override fun bind(data: RateFlightData, action: FlightSubmitAdapter.IRateActionListener) {
+        override fun bind(
+            data: RateFlightData,
+            action: FlightSubmitAdapter.IRateActionListener,
+            isActive: Boolean
+        ) {
             if (data !is RateFlightData.RateCrowd)
                 throw UnsupportedOperationException("Unsupported data. " +
                         "Data have to be type: RateFlightData.RateFlight")
+
+            crowdRateBar.isEnabled = isActive
 
             // -1 cause rating range(1,6)
             crowdRateBar.rating = data.rating.value.toFloat() - 1
@@ -37,11 +42,17 @@ sealed class RateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
         private val headerTextView: AppCompatTextView = itemView.findViewById(R.id.header_text_view)
         private val rateBar: AppCompatRatingBar = itemView.findViewById(R.id.rate_bar)
 
-        override fun bind(data: RateFlightData, action: FlightSubmitAdapter.IRateActionListener) {
+        override fun bind(
+            data: RateFlightData,
+            action: FlightSubmitAdapter.IRateActionListener,
+            isActive: Boolean
+        ) {
 
             if (data !is RateFlightData.RateFlight)
                 throw UnsupportedOperationException("Unsupported data." +
                         " Data have to be type: RateFlightData.RateFlight")
+
+            rateBar.isEnabled = isActive
 
             headerTextView.text = itemView.context.getString(
                 R.string.rate_flight_header,

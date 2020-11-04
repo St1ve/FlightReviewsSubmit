@@ -6,24 +6,28 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.ProgressBar
 import android.widget.RatingBar
 import android.widget.TextView
+import android.widget.Toast
+import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.iterator
 import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flightreviewssubmit.R
 import com.example.flightreviewssubmit.data.RateFlightData
 import com.example.flightreviewssubmit.ui.recyclerview.adapter.FlightSubmitAdapter
 import com.example.flightreviewssubmit.viewmodel.SubmitViewModel
 import com.google.android.material.appbar.AppBarLayout
+import kotlinx.coroutines.*
 import kotlin.system.exitProcess
 
 class SubmitFragment : Fragment() {
@@ -37,11 +41,11 @@ class SubmitFragment : Fragment() {
     private lateinit var avrRateBar: RatingBar
     private lateinit var foodCheckBox: AppCompatCheckBox
     private lateinit var feedbackEditText: AppCompatEditText
-
     private lateinit var mainHeaderSubmitTextView: TextView
     private lateinit var infoRaceDateSubmitTextView: TextView
     private lateinit var infoDirectionSubmitTextView: TextView
-
+    private lateinit var submitButton: AppCompatButton
+    private lateinit var submitProgressBar: ProgressBar
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,6 +61,13 @@ class SubmitFragment : Fragment() {
 
         submitViewModel = ViewModelProvider(this).get(SubmitViewModel::class.java)
 
+        initUiElements(view)
+        initObservers()
+        initListeners()
+        initRecyclerView()
+    }
+
+    private fun initUiElements(view: View) {
         appBarLayout = view.findViewById(R.id.app_bar_layout)
         exitImageButton = view.findViewById(R.id.exit_submit_button)
         mainHeaderSubmitTextView = view.findViewById(R.id.main_header_submit_text_view)
@@ -66,10 +77,8 @@ class SubmitFragment : Fragment() {
         ratingRecyclerView = view.findViewById(R.id.rating_recycler_view)
         foodCheckBox = view.findViewById(R.id.food_check_box)
         feedbackEditText = view.findViewById(R.id.feedback_edit_text)
-
-        initObservers()
-        initListeners()
-        initRecyclerView()
+        submitButton = view.findViewById(R.id.submit_button)
+        submitProgressBar = view.findViewById(R.id.submit_progress_bar)
     }
 
     private fun initObservers() {
@@ -77,13 +86,35 @@ class SubmitFragment : Fragment() {
             // -1 cause rating range(1,6)
             avrRateBar.rating = it - 1
         })
+
         submitViewModel.isFood.observe(viewLifecycleOwner, Observer {
             foodCheckBox.isChecked = it
         })
+
         submitViewModel.feedback.observe(viewLifecycleOwner, Observer {
             //Check, if text the same to prevent circle with calls setText().
             if (it != feedbackEditText.text.toString())
                 feedbackEditText.setText(it)
+        })
+
+        submitViewModel.isLoading.observe(viewLifecycleOwner, Observer {
+            submitFlightAdapter.elementsActive = !it
+            feedbackEditText.isEnabled = !it
+            foodCheckBox.isEnabled = !it
+
+            if (it == true) {
+                submitButton.visibility = View.GONE
+                submitProgressBar.visibility = View.VISIBLE
+            } else {
+                submitButton.visibility = View.VISIBLE
+                submitProgressBar.visibility = View.GONE
+            }
+        })
+
+        submitViewModel.flightResult.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let { flightData ->
+                Toast.makeText(context, "$flightData", Toast.LENGTH_SHORT).show()
+            }
         })
     }
 
@@ -116,6 +147,12 @@ class SubmitFragment : Fragment() {
 
         feedbackEditText.doOnTextChanged { text, _, _, _ ->
             submitViewModel.setFeedback(text.toString())
+        }
+
+        submitButton.setOnClickListener {
+            lifecycleScope.launch {
+                submitViewModel.onDataSubmitClick()
+            }
         }
     }
 

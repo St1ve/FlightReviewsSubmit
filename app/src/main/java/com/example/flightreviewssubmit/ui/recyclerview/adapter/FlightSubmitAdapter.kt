@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.flightreviewssubmit.R
 import com.example.flightreviewssubmit.data.RateFlightData
 import com.example.flightreviewssubmit.ui.recyclerview.viewholder.RateViewHolder
-import com.example.flightreviewssubmit.util.RatingRange
 
 class FlightSubmitAdapter(
     private val inflater: LayoutInflater,
@@ -14,6 +13,11 @@ class FlightSubmitAdapter(
 ) : RecyclerView.Adapter<RateViewHolder>() {
 
     private var lstRatings: List<RateFlightData> = emptyList()
+    var elementsActive: Boolean = true
+    set(value) {
+        field = value
+        notifyDataSetChanged()
+    }
 
     fun update(newRatings: List<RateFlightData>) {
         lstRatings = newRatings
@@ -44,7 +48,7 @@ class FlightSubmitAdapter(
 
     override fun onBindViewHolder(holder: RateViewHolder, position: Int) {
         val data = lstRatings[position]
-        holder.bind(data, rateListActionListener)
+        holder.bind(data, rateListActionListener, elementsActive)
     }
 
     override fun getItemCount(): Int {
