@@ -8,5 +8,14 @@
         android:id="@+id/submitFragment"
         android:name="com.example.flightreviewssubmit.ui.fragment.SubmitFragment"
         android:label="submit_fragment"
-        tools:layout="@layout/submit_fragment" />
+        tools:layout="@layout/submit_fragment" >
+        <action
+            android:id="@+id/action_submitFragment_to_successFragment"
+            app:destination="@id/successFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/successFragment"
+        android:name="com.example.flightreviewssubmit.ui.fragment.SuccessFragment"
+        android:label="fragment_success"
+        tools:layout="@layout/fragment_success" />
 </navigation>

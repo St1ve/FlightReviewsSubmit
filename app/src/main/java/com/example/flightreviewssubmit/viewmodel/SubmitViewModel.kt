@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import com.example.flightreviewssubmit.data.FlightData
 import com.example.flightreviewssubmit.data.RateFlightData
 import com.example.flightreviewssubmit.util.SingleEvent
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
 
 class SubmitViewModel : ViewModel() {
 
@@ -74,14 +76,16 @@ class SubmitViewModel : ViewModel() {
         }
     }
 
-    suspend fun onDataSubmitClick() {
-        viewModelScope.launch(Dispatchers.IO) {
+    suspend fun onDataSubmitClick() : Boolean {
+        withContext(viewModelScope.coroutineContext + Dispatchers.IO) {
             _loading.postValue(true)
-            val lstRating  = getLstRatingForTransfer()
+            val lstRating = getLstRatingForTransfer()
             _loading.postValue(false)
 
             _flightResults.postValue(SingleEvent(FlightData(lstRating, feedback.value!!)))
         }
+
+        return true
     }
 
     private suspend fun getLstRatingForTransfer(): ArrayList<RateFlightData?> {

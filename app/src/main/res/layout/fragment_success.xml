@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragment.SuccessFragment">
+
+    <androidx.appcompat.widget.AppCompatImageButton
+        android:id="@+id/exit_success_image_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/small_margin"
+        android:layout_marginTop="@dimen/small_margin"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_close_24"
+        android:tint="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/main_header_success_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/small_margin"
+        android:layout_marginTop="40dp"
+        android:layout_marginBottom="@dimen/small_margin"
+        android:text="Thanks for your review"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/exit_success_image_button" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/subtitle_success_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin"
+        android:text="I will be published after moderation"
+        android:textColor="@color/dark_grey"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/main_header_success_text_view" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/success_icon"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin"
+        android:src="@drawable/ic_success"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/subtitle_success_text_view" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/header_rate_others_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin"
+        android:text="How others rate this flight"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/success_icon" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/info_rate_card_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin"
+        app:cardBackgroundColor="@color/grey"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/header_rate_others_text_view">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/info_flight_success_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/small_margin"
+                android:text="American Airlines, AA 1487"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/info_average_rate_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/small_margin"
+                android:background="@drawable/avr_rating_shape"
+                android:text="5,0"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/info_flight_success_text_view" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/info_rate_aircraft_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/small_margin"
+                android:text="5.0 Aircraft"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/info_average_rate_text_view" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/info_rate_crew_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginTop="5dp"
+                android:text="4.8 Crew"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/info_rate_aircraft_text_view" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/info_rate_seats_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="@dimen/small_margin"
+                android:text="5.0 Seats"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/info_rate_crew_text_view" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/info_rate_flight_experience_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:text="4.2 Flight experience"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toEndOf="@id/info_rate_aircraft_text_view"
+                app:layout_constraintTop_toTopOf="@id/info_rate_aircraft_text_view" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/info_rate_food_text_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="5.0 Aircraft"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@id/info_rate_flight_experience_text_view"
+                app:layout_constraintTop_toBottomOf="@id/info_rate_flight_experience_text_view" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <ImageButton
+        android:id="@+id/star_image_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_star_border"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/info_rate_card_view" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/header_reviews_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="20dp"
+        android:text="Flight reviews"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/count_of_reviews_text_view"
+        app:layout_constraintStart_toEndOf="@id/star_image_button"
+        app:layout_constraintTop_toTopOf="@id/star_image_button" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/count_of_reviews_text_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="5dp"
+        android:text="34"
+        android:textColor="@color/dark_grey"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/open_reviews_image_button"
+        app:layout_constraintTop_toTopOf="@id/star_image_button" />
+
+    <ImageButton
+        android:id="@+id/open_reviews_image_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/small_margin"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_arrow_forward"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/star_image_button" />
+
+
+    <View
+        android:id="@+id/success_divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/grey"
+        android:layout_margin="@dimen/small_margin"
+        app:layout_constraintTop_toBottomOf="@id/star_image_button"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:layout_width="50dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="@dimen/small_margin"
+        android:layout_height="30dp"
+        android:text="Done"
+        android:textAlignment="textEnd"
+        android:background="@android:color/transparent"
+        android:textStyle="bold"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:textColor="@color/blue"
+        app:layout_constraintTop_toBottomOf="@id/success_divider"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
