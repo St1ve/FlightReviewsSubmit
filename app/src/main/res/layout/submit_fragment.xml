@@ -11,7 +11,6 @@
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/submit_topbar_shape"
         android:fitsSystemWindows="false"
         android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
 
@@ -26,7 +25,6 @@
                 android:id="@+id/submit_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@drawable/submit_topbar_shape"
                 app:layout_collapseMode="pin">
 
                 <androidx.appcompat.widget.AppCompatImageButton
@@ -92,7 +90,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="55dp"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/small_margin"
                     android:isIndicator="true"
                     android:max="6"
                     android:numStars="5"
@@ -174,4 +171,14 @@
 
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.core.widget.NestedScrollView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/small_margin"
+        android:background="@drawable/submit_topbar_shape"
+        app:layout_anchor="@id/app_bar_layout"
+        app:layout_anchorGravity="bottom"
+        android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"
+        android:layout_gravity="bottom"/>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
