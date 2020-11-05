@@ -11,7 +11,10 @@ import com.example.flightreviewssubmit.ui.recyclerview.adapter.FlightSubmitAdapt
 import java.lang.UnsupportedOperationException
 
 sealed class RateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    abstract fun bind(data: RateFlightData, action: FlightSubmitAdapter.IRateActionListener, isActive: Boolean)
+    abstract fun bind(
+        data: RateFlightData,
+        action: FlightSubmitAdapter.IRateActionListener,
+        isActive: Boolean)
 
     class RateCrowdedViewHolder(itemView: View) : RateViewHolder(itemView){
         private val crowdRateBar: AppCompatRatingBar = itemView.findViewById(R.id.crowd_rate_bar)
@@ -30,10 +33,11 @@ sealed class RateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
             // -1 cause rating range(1,6)
             crowdRateBar.rating = data.rating.value.toFloat() - 1
 
-            crowdRateBar.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener { _, rating, _ ->
-                // +1 cause rating range(1,6)
-                data.rating.value = rating.toInt() + 1
-                action.setRating(data)
+            crowdRateBar.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener {
+                    _, rating, _ ->
+                        // +1 cause rating range(1,6)
+                        data.rating.value = rating.toInt() + 1
+                        action.setRating(data)
             }
         }
     }
@@ -47,7 +51,6 @@ sealed class RateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
             action: FlightSubmitAdapter.IRateActionListener,
             isActive: Boolean
         ) {
-
             if (data !is RateFlightData.RateFlight)
                 throw UnsupportedOperationException("Unsupported data." +
                         " Data have to be type: RateFlightData.RateFlight")
@@ -62,10 +65,11 @@ sealed class RateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
             // -1 cause rating range(1,6)
             rateBar.rating = data.rating.value.toFloat() - 1
 
-            rateBar.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener { _, rating, _ ->
-                // +1 cause rating range(1,6)
-                data.rating.value = rating.toInt() + 1
-                action.setRating(data)
+            rateBar.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener {
+                    _, rating, _ ->
+                        // +1 cause rating range(1,6)
+                        data.rating.value = rating.toInt() + 1
+                        action.setRating(data)
             }
         }
     }

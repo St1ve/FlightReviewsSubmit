@@ -9,7 +9,7 @@ import com.example.flightreviewssubmit.util.RatingRange
  *  @param header  name of rating
  *  @param rating  Int value from 1 to 6
  */
-sealed class RateFlightData(open val header: String, open var rating: RatingRange){
+sealed class RateFlightData(open val header: String, open var rating: RatingRange) {
     companion object {
         const val RATE_CROWDED_VIEW = 0
         const val RATE_FLIGHT_VIEW = 1
