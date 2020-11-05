@@ -1,6 +1,9 @@
 package com.example.flightreviewssubmit.ui.fragment
 
+import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +17,7 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
+import androidx.core.app.ActivityCompat.finishAffinity
 import androidx.core.content.ContextCompat
 import androidx.core.view.iterator
 import androidx.core.widget.doOnTextChanged
@@ -29,7 +33,6 @@ import com.example.flightreviewssubmit.ui.recyclerview.adapter.FlightSubmitAdapt
 import com.example.flightreviewssubmit.viewmodel.SubmitViewModel
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.coroutines.*
-import kotlin.system.exitProcess
 
 class SubmitFragment : Fragment() {
 
@@ -138,8 +141,7 @@ class SubmitFragment : Fragment() {
         )
 
         exitImageButton.setOnClickListener {
-            activity?.finish()
-            exitProcess(0)
+            showQuitDialog()
         }
 
         foodCheckBox.setOnClickListener {
@@ -179,6 +181,7 @@ class SubmitFragment : Fragment() {
      * Setting up keyboard
      * If user will click on view, keyboard will hide
      */
+    @SuppressLint("ClickableViewAccessibility")
     private fun setupKeyBoard(view: View) {
 
         if (view !is AppCompatEditText) {
@@ -202,5 +205,24 @@ class SubmitFragment : Fragment() {
                 InputMethodManager::class.java)!!
             inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0)
         }
+    }
+
+    private fun showQuitDialog() {
+        val alertDialogBuilder: AlertDialog.Builder = AlertDialog.Builder(context)
+
+        val actionCancel = DialogInterface.OnClickListener { dialog, _ -> dialog.dismiss() }
+
+        val actionAccept = DialogInterface.OnClickListener { _, _ -> activity?.let {
+            finishAffinity(
+                it
+            )
+        } }
+
+        alertDialogBuilder.setMessage(getString(R.string.alert_dialog_quit_message))
+        alertDialogBuilder.setTitle(getString(R.string.alert_dialog_quit_title))
+        alertDialogBuilder.setNegativeButton("No", actionCancel)
+        alertDialogBuilder.setPositiveButton("Yes", actionAccept)
+        val dialog: AlertDialog = alertDialogBuilder.create()
+        dialog.show()
     }
 }
