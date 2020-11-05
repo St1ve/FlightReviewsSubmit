@@ -86,6 +86,11 @@ class SubmitFragment : Fragment() {
     }
 
     private fun initObservers() {
+        submitViewModel.isTransactionSucceed.observe(viewLifecycleOwner, Observer {
+            if (it.getContentIfNotHandled() == true)
+                findNavController().navigate(R.id.action_submitFragment_to_successFragment)
+        })
+
         submitViewModel.avrRating.observe(viewLifecycleOwner, Observer {
             // -1 cause rating range(1,6)
             avrRateBar.rating = it - 1
@@ -154,8 +159,7 @@ class SubmitFragment : Fragment() {
 
         submitButton.setOnClickListener {
             lifecycleScope.launch {
-                if (submitViewModel.onDataSubmitClick())
-                    findNavController().navigate(R.id.action_submitFragment_to_successFragment)
+                submitViewModel.onDataSubmitClick()
             }
         }
     }

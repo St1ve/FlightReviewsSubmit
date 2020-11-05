@@ -21,6 +21,10 @@ class SubmitViewModel : ViewModel() {
     val isLoading: LiveData<Boolean>
         get() = _loading
 
+    private val _transactionSucceed: MutableLiveData<SingleEvent<Boolean>> = MutableLiveData(SingleEvent(false))
+    val isTransactionSucceed: LiveData<SingleEvent<Boolean>>
+        get() = _transactionSucceed
+
     private val _avrRating: MutableLiveData<Float> = MutableLiveData(0.0F)
     val avrRating: LiveData<Float>
         get() = _avrRating
@@ -78,19 +82,17 @@ class SubmitViewModel : ViewModel() {
 
     /**
      * Preparing data for transfer (showing)
-     * Return true, which shows, that transformation was succeed.
-     * (In our case no database and network, so always true).
+     * Set _transactionSucceed to true if data "saving in room" was succeed
      */
-    suspend fun onDataSubmitClick() : Boolean {
+    suspend fun onDataSubmitClick() {
         withContext(viewModelScope.coroutineContext + Dispatchers.IO) {
             _loading.postValue(true)
             val lstRating = getLstRatingForTransfer()
             _loading.postValue(false)
 
             _flightResults.postValue(SingleEvent(FlightData(lstRating, feedback.value!!)))
+            _transactionSucceed.postValue(SingleEvent(true))
         }
-
-        return true
     }
 
     /**
