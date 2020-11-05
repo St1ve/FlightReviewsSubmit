@@ -9,6 +9,7 @@ import com.example.flightreviewssubmit.data.RateFlightData
 import com.example.flightreviewssubmit.util.SingleEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class SubmitViewModel : ViewModel() {
@@ -85,7 +86,7 @@ class SubmitViewModel : ViewModel() {
      * Set _transactionSucceed to true if data "saving in room" was succeed
      */
     suspend fun onDataSubmitClick() {
-        withContext(viewModelScope.coroutineContext + Dispatchers.IO) {
+        viewModelScope.launch(Dispatchers.IO) {
             _loading.postValue(true)
             val lstRating = getLstRatingForTransfer()
             _loading.postValue(false)
