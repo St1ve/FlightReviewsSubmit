@@ -21,14 +21,15 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/main_header_success_text_view"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="32dp"
         android:layout_marginHorizontal="@dimen/small_margin"
         android:layout_marginTop="40dp"
-        android:layout_marginBottom="@dimen/small_margin"
+        android:layout_marginBottom="16dp"
         android:text="Thanks for your review"
         android:textColor="@color/black"
         android:textSize="24sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/subtitle_success_text_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/exit_success_image_button" />
@@ -36,7 +37,7 @@
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/subtitle_success_text_view"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="24dp"
         android:layout_margin="@dimen/small_margin"
         android:text="I will be published after moderation"
         android:textColor="@color/dark_grey"
@@ -48,9 +49,10 @@
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/success_icon"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_margin="@dimen/small_margin"
         android:src="@drawable/ic_success"
+        app:layout_constraintBottom_toTopOf="@+id/header_rate_others_text_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/subtitle_success_text_view" />
@@ -60,13 +62,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/small_margin"
+        android:layout_marginBottom="16dp"
         android:text="How others rate this flight"
         android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/info_rate_card_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/success_icon" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/info_rate_card_view"
@@ -80,71 +83,75 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="140dp">
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/left_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_begin="16dp" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/info_flight_success_text_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/small_margin"
                 android:text="American Airlines, AA 1487"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintBottom_toTopOf="@+id/info_average_rate_text_view"
+                app:layout_constraintStart_toStartOf="@id/left_guideline"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="spread" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/info_average_rate_text_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/small_margin"
                 android:background="@drawable/avr_rating_shape"
                 android:text="5,0"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/info_rate_aircraft_text_view"
+                app:layout_constraintStart_toStartOf="@id/left_guideline"
                 app:layout_constraintTop_toBottomOf="@id/info_flight_success_text_view" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/info_rate_aircraft_text_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/small_margin"
                 android:text="5.0 Aircraft"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/info_rate_crew_text_view"
+                app:layout_constraintStart_toStartOf="@id/left_guideline"
                 app:layout_constraintTop_toBottomOf="@id/info_average_rate_text_view" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/info_rate_crew_text_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/small_margin"
-                android:layout_marginTop="5dp"
                 android:text="4.8 Crew"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/info_rate_seats_text_view"
+                app:layout_constraintStart_toStartOf="@+id/left_guideline"
                 app:layout_constraintTop_toBottomOf="@id/info_rate_aircraft_text_view" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/info_rate_seats_text_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/small_margin"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="@dimen/small_margin"
                 android:text="5.0 Seats"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toStartOf="@id/left_guideline"
                 app:layout_constraintTop_toBottomOf="@id/info_rate_crew_text_view" />
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -156,6 +163,8 @@
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toEndOf="@id/info_rate_aircraft_text_view"
                 app:layout_constraintTop_toTopOf="@id/info_rate_aircraft_text_view" />
 
@@ -163,13 +172,24 @@
                 android:id="@+id/info_rate_food_text_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:textAlignment="textStart"
                 android:layout_marginTop="5dp"
                 android:text="5.0 Aircraft"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintStart_toStartOf="@id/info_rate_flight_experience_text_view"
+                app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+                app:layout_constraintStart_toStartOf="@+id/info_rate_flight_experience_text_view"
                 app:layout_constraintTop_toBottomOf="@id/info_rate_flight_experience_text_view" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/right_guideline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:orientation="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintGuide_begin="363dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -180,8 +200,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/small_margin"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="16dp"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_star_border"
+        app:layout_constraintBottom_toTopOf="@+id/success_divider"
+        app:layout_constraintEnd_toStartOf="@+id/header_reviews_text_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/info_rate_card_view" />
 
@@ -190,60 +215,77 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:text="Flight reviews"
         android:textColor="@color/black"
         android:textSize="18sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/success_divider"
         app:layout_constraintEnd_toStartOf="@id/count_of_reviews_text_view"
+        app:layout_constraintHorizontal_weight="4"
         app:layout_constraintStart_toEndOf="@id/star_image_button"
-        app:layout_constraintTop_toTopOf="@id/star_image_button" />
+        app:layout_constraintTop_toBottomOf="@+id/info_rate_card_view" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/count_of_reviews_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="5dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
         android:text="34"
+        android:textAlignment="textEnd"
         android:textColor="@color/dark_grey"
         android:textSize="18sp"
         android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/success_divider"
         app:layout_constraintEnd_toStartOf="@id/open_reviews_image_button"
-        app:layout_constraintTop_toTopOf="@id/star_image_button" />
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@+id/header_reviews_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/info_rate_card_view" />
 
     <ImageButton
         android:id="@+id/open_reviews_image_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="@dimen/small_margin"
+        android:layout_marginBottom="16dp"
         android:background="@android:color/transparent"
         android:src="@drawable/ic_arrow_forward"
+        app:layout_constraintBottom_toTopOf="@+id/success_divider"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/star_image_button" />
+        app:layout_constraintStart_toEndOf="@+id/count_of_reviews_text_view"
+        app:layout_constraintTop_toBottomOf="@+id/info_rate_card_view" />
 
 
     <View
         android:id="@+id/success_divider"
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:background="@color/grey"
         android:layout_margin="@dimen/small_margin"
-        app:layout_constraintTop_toBottomOf="@id/star_image_button"
+        android:layout_marginTop="16dp"
+        android:background="@color/grey"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/header_reviews_text_view" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="50dp"
+        android:layout_height="30dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="@dimen/small_margin"
-        android:layout_height="30dp"
+        android:layout_marginBottom="16dp"
+        android:background="@android:color/transparent"
         android:text="Done"
         android:textAlignment="textEnd"
-        android:background="@android:color/transparent"
-        android:textStyle="bold"
         android:textAllCaps="false"
-        android:textSize="18sp"
         android:textColor="@color/blue"
-        app:layout_constraintTop_toBottomOf="@id/success_divider"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/success_divider" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
