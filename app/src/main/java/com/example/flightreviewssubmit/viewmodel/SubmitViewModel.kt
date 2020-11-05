@@ -76,6 +76,11 @@ class SubmitViewModel : ViewModel() {
         }
     }
 
+    /**
+     * Preparing data for transfer (showing)
+     * Return true, which shows, that transformation was succeed.
+     * (In our case no database and network, so always true).
+     */
     suspend fun onDataSubmitClick() : Boolean {
         withContext(viewModelScope.coroutineContext + Dispatchers.IO) {
             _loading.postValue(true)
@@ -88,6 +93,10 @@ class SubmitViewModel : ViewModel() {
         return true
     }
 
+    /**
+     * Transform _lstRatings.value. If there was no food in flight, then this rating become null,
+     * otherwise do not transform list.
+     */
     private suspend fun getLstRatingForTransfer(): ArrayList<RateFlightData?> {
         delay(4000)
         return withContext(Dispatchers.Default) {

@@ -2,6 +2,13 @@ package com.example.flightreviewssubmit.data
 
 import com.example.flightreviewssubmit.util.RatingRange
 
+/**
+ * Sealed class which contains 2 types of Rating:
+ *  - Rate for crew
+ *  - Rate for custom parameter
+ *  @param header  name of rating
+ *  @param rating  Int value from 1 to 6
+ */
 sealed class RateFlightData(open val header: String, open var rating: RatingRange){
     companion object {
         const val RATE_CROWDED_VIEW = 0

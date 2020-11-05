@@ -1,5 +1,10 @@
 package com.example.flightreviewssubmit.data
 
+/**
+ * Class for saving data from submit screen
+ * @param ratings list of RateFlightData (different rating such as "food", "crew" and so on)
+ * @param feedback String, which contains feedback from user
+ */
 data class FlightData(val ratings: List<RateFlightData?>, val feedback: String) {
     override fun toString(): String {
         var resultString = ""

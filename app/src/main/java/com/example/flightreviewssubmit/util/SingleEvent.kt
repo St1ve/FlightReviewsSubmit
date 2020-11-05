@@ -1,5 +1,8 @@
 package com.example.flightreviewssubmit.util
 
+/**
+ * Class for LiveData, which prevent several showing data.
+ */
 open class SingleEvent<out T>(private val content: T) {
 
     var hasBeenHandled = false
