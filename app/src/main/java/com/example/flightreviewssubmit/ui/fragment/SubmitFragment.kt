@@ -38,18 +38,18 @@ class SubmitFragment : Fragment() {
 
     private lateinit var submitViewModel: SubmitViewModel
 
-    private lateinit var appBarLayout: AppBarLayout
-    private lateinit var exitImageButton: AppCompatImageButton
-    private lateinit var ratingRecyclerView: RecyclerView
-    private lateinit var submitFlightAdapter: FlightSubmitAdapter
-    private lateinit var avrRateBar: RatingBar
-    private lateinit var foodCheckBox: AppCompatCheckBox
-    private lateinit var feedbackEditText: AppCompatEditText
-    private lateinit var mainHeaderSubmitTextView: TextView
-    private lateinit var infoRaceDateSubmitTextView: TextView
-    private lateinit var infoDirectionSubmitTextView: TextView
-    private lateinit var submitButton: AppCompatButton
-    private lateinit var submitProgressBar: ProgressBar
+    private var appBarLayout: AppBarLayout? = null
+    private var exitImageButton: AppCompatImageButton? = null
+    private var ratingRecyclerView: RecyclerView? = null
+    private var submitFlightAdapter: FlightSubmitAdapter? = null
+    private var avrRateBar: RatingBar? = null
+    private var foodCheckBox: AppCompatCheckBox? = null
+    private var feedbackEditText: AppCompatEditText? = null
+    private var mainHeaderSubmitTextView: TextView? = null
+    private var infoRaceDateSubmitTextView: TextView? = null
+    private var infoDirectionSubmitTextView: TextView? = null
+    private var submitButton: AppCompatButton? = null
+    private var submitProgressBar: ProgressBar? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -93,30 +93,30 @@ class SubmitFragment : Fragment() {
 
         submitViewModel.avrRating.observe(viewLifecycleOwner, Observer {
             // -1 cause rating range(1,6)
-            avrRateBar.rating = it - 1
+            avrRateBar?.rating = it - 1
         })
 
         submitViewModel.isFood.observe(viewLifecycleOwner, Observer {
-            foodCheckBox.isChecked = it
+            foodCheckBox?.isChecked = it
         })
 
         submitViewModel.feedback.observe(viewLifecycleOwner, Observer {
             //Check, if text the same to prevent circle with calls setText().
-            if (it != feedbackEditText.text.toString())
-                feedbackEditText.setText(it)
+            if (it != feedbackEditText?.text.toString())
+                feedbackEditText?.setText(it)
         })
 
         submitViewModel.isLoading.observe(viewLifecycleOwner, Observer {
-            submitFlightAdapter.elementsActive = !it
-            feedbackEditText.isEnabled = !it
-            foodCheckBox.isEnabled = !it
+            submitFlightAdapter?.elementsActive = !it
+            feedbackEditText?.isEnabled = !it
+            foodCheckBox?.isEnabled = !it
 
             if (it == true) {
-                submitButton.visibility = View.GONE
-                submitProgressBar.visibility = View.VISIBLE
+                submitButton?.visibility = View.GONE
+                submitProgressBar?.visibility = View.VISIBLE
             } else {
-                submitButton.visibility = View.VISIBLE
-                submitProgressBar.visibility = View.GONE
+                submitButton?.visibility = View.VISIBLE
+                submitProgressBar?.visibility = View.GONE
             }
         })
 
@@ -128,36 +128,36 @@ class SubmitFragment : Fragment() {
     }
 
     private fun initListeners() {
-        appBarLayout.addOnOffsetChangedListener(
+        appBarLayout?.addOnOffsetChangedListener(
             AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
                 if (appBarLayout.totalScrollRange + verticalOffset == 0) {
-                    mainHeaderSubmitTextView.visibility = View.GONE
-                    infoRaceDateSubmitTextView.visibility = View.GONE
-                    infoDirectionSubmitTextView.visibility = View.GONE
-                    avrRateBar.visibility = View.GONE
+                    mainHeaderSubmitTextView?.visibility = View.GONE
+                    infoRaceDateSubmitTextView?.visibility = View.GONE
+                    infoDirectionSubmitTextView?.visibility = View.GONE
+                    avrRateBar?.visibility = View.GONE
                 }
                 else {
-                    mainHeaderSubmitTextView.visibility = View.VISIBLE
-                    infoRaceDateSubmitTextView.visibility = View.VISIBLE
-                    infoDirectionSubmitTextView.visibility = View.VISIBLE
-                    avrRateBar.visibility = View.VISIBLE
+                    mainHeaderSubmitTextView?.visibility = View.VISIBLE
+                    infoRaceDateSubmitTextView?.visibility = View.VISIBLE
+                    infoDirectionSubmitTextView?.visibility = View.VISIBLE
+                    avrRateBar?.visibility = View.VISIBLE
                 }
             }
         )
 
-        exitImageButton.setOnClickListener {
+        exitImageButton?.setOnClickListener {
             showQuitDialog()
         }
 
-        foodCheckBox.setOnClickListener {
-            submitViewModel.setIsFood(foodCheckBox.isChecked)
+        foodCheckBox?.setOnClickListener {
+            submitViewModel.setIsFood(foodCheckBox!!.isChecked)
         }
 
-        feedbackEditText.doOnTextChanged { text, _, _, _ ->
+        feedbackEditText?.doOnTextChanged { text, _, _, _ ->
             submitViewModel.setFeedback(text.toString())
         }
 
-        submitButton.setOnClickListener {
+        submitButton?.setOnClickListener {
             lifecycleScope.launch {
                 submitViewModel.onDataSubmitClick()
             }
@@ -175,10 +175,10 @@ class SubmitFragment : Fragment() {
         )
 
         submitViewModel.lstRatings.observe(viewLifecycleOwner, Observer { lstRating ->
-            submitFlightAdapter.update(lstRating)
+            submitFlightAdapter?.update(lstRating)
         })
 
-        ratingRecyclerView.adapter = submitFlightAdapter
+        ratingRecyclerView?.adapter = submitFlightAdapter
     }
 
     /**
@@ -200,6 +200,26 @@ class SubmitFragment : Fragment() {
                 setupKeyBoard(el)
             }
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        setViewItemsToNull()
+    }
+
+    private fun setViewItemsToNull() {
+        appBarLayout = null
+        exitImageButton = null
+        ratingRecyclerView = null
+        submitFlightAdapter = null
+        avrRateBar = null
+        foodCheckBox = null
+        feedbackEditText = null
+        mainHeaderSubmitTextView = null
+        infoRaceDateSubmitTextView = null
+        infoDirectionSubmitTextView = null
+        submitButton = null
+        submitProgressBar = null
     }
 
     private fun Activity.hideSoftKeyboard() {
