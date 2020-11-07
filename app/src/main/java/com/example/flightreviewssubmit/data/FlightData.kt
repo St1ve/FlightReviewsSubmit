@@ -10,7 +10,7 @@ data class FlightData(val ratings: List<RateFlightData?>, val feedback: String) 
         var resultString = ""
         for (el in ratings) {
             if (el != null){
-                resultString += "\n ${el.header} rating is ${el.rating.value}"
+                resultString += "\n ${el.name} rating is ${el.rate}"
             } else {
                 resultString += "\n null"
             }

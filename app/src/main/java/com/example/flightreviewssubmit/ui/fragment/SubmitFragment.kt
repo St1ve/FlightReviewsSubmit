@@ -1,18 +1,18 @@
 package com.example.flightreviewssubmit.ui.fragment
 
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.ProgressBar
-import android.widget.RatingBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatEditText
@@ -28,7 +28,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flightreviewssubmit.R
-import com.example.flightreviewssubmit.data.RateFlightData
+import com.example.flightreviewssubmit.data.RateFlightCellData
 import com.example.flightreviewssubmit.ui.recyclerview.adapter.FlightSubmitAdapter
 import com.example.flightreviewssubmit.viewmodel.SubmitViewModel
 import com.google.android.material.appbar.AppBarLayout
@@ -39,10 +39,11 @@ class SubmitFragment : Fragment() {
     private lateinit var submitViewModel: SubmitViewModel
 
     private var appBarLayout: AppBarLayout? = null
+    private var logoIconImageView: ImageView? = null
     private var exitImageButton: AppCompatImageButton? = null
     private var ratingRecyclerView: RecyclerView? = null
     private var submitFlightAdapter: FlightSubmitAdapter? = null
-    private var avrRateBar: RatingBar? = null
+    private var flightRateBar: RatingBar? = null
     private var foodCheckBox: AppCompatCheckBox? = null
     private var feedbackEditText: AppCompatEditText? = null
     private var mainHeaderSubmitTextView: TextView? = null
@@ -73,11 +74,12 @@ class SubmitFragment : Fragment() {
 
     private fun initUiElements(view: View) {
         appBarLayout = view.findViewById(R.id.app_bar_layout)
+        logoIconImageView = view.findViewById(R.id.logo_icon_submit_image_view)
         exitImageButton = view.findViewById(R.id.exit_submit_button)
         mainHeaderSubmitTextView = view.findViewById(R.id.main_header_submit_text_view)
         infoRaceDateSubmitTextView = view.findViewById(R.id.info_race_date_submit_text_view)
         infoDirectionSubmitTextView = view.findViewById(R.id.info_direction_submit_text_view)
-        avrRateBar = view.findViewById(R.id.average_rate_bar)
+        flightRateBar = view.findViewById(R.id.average_rate_bar)
         ratingRecyclerView = view.findViewById(R.id.rating_recycler_view)
         foodCheckBox = view.findViewById(R.id.food_check_box)
         feedbackEditText = view.findViewById(R.id.feedback_edit_text)
@@ -91,12 +93,12 @@ class SubmitFragment : Fragment() {
                 findNavController().navigate(R.id.action_submitFragment_to_successFragment)
         })
 
-        submitViewModel.avrRating.observe(viewLifecycleOwner, Observer {
+        submitViewModel.flightRating.observe(viewLifecycleOwner, Observer {
             // -1 cause rating range(1,6)
-            avrRateBar?.rating = it - 1
+            flightRateBar?.rating = it
         })
 
-        submitViewModel.isFood.observe(viewLifecycleOwner, Observer {
+        submitViewModel.isNoFood.observe(viewLifecycleOwner, Observer {
             foodCheckBox?.isChecked = it
         })
 
@@ -107,7 +109,6 @@ class SubmitFragment : Fragment() {
         })
 
         submitViewModel.isLoading.observe(viewLifecycleOwner, Observer {
-            submitFlightAdapter?.elementsActive = !it
             feedbackEditText?.isEnabled = !it
             foodCheckBox?.isEnabled = !it
 
@@ -130,20 +131,26 @@ class SubmitFragment : Fragment() {
     private fun initListeners() {
         appBarLayout?.addOnOffsetChangedListener(
             AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-                if (appBarLayout.totalScrollRange + verticalOffset == 0) {
-                    mainHeaderSubmitTextView?.visibility = View.GONE
-                    infoRaceDateSubmitTextView?.visibility = View.GONE
-                    infoDirectionSubmitTextView?.visibility = View.GONE
-                    avrRateBar?.visibility = View.GONE
+                if (appBarLayout.totalScrollRange + verticalOffset < 400) {
+                    transitionYAnim(mainHeaderSubmitTextView, 0f, View.GONE)
+                    transitionYAnim(infoRaceDateSubmitTextView, 0f, View.GONE)
+                    transitionYAnim(infoDirectionSubmitTextView, 0f, View.GONE)
+                    transitionYAnim(flightRateBar, 0f, View.GONE)
                 }
                 else {
-                    mainHeaderSubmitTextView?.visibility = View.VISIBLE
-                    infoRaceDateSubmitTextView?.visibility = View.VISIBLE
-                    infoDirectionSubmitTextView?.visibility = View.VISIBLE
-                    avrRateBar?.visibility = View.VISIBLE
+                    transitionYAnim(mainHeaderSubmitTextView,1f, View.VISIBLE)
+                    transitionYAnim(infoRaceDateSubmitTextView,1f, View.VISIBLE)
+                    transitionYAnim(infoDirectionSubmitTextView,1f, View.VISIBLE)
+                    transitionYAnim(flightRateBar,1f, View.VISIBLE)
                 }
             }
         )
+
+
+        flightRateBar?.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener {
+                _, rating, _ ->
+            submitViewModel.setFlightRating(rating)
+        }
 
         exitImageButton?.setOnClickListener {
             showQuitDialog()
@@ -164,18 +171,31 @@ class SubmitFragment : Fragment() {
         }
     }
 
+    private fun transitionYAnim(view: View?, alpha: Float, visibility: Int){
+        view?.animate()
+            ?.setDuration(300)
+            ?.alpha(alpha)
+            ?.setListener(object : AnimatorListenerAdapter() {
+                override fun onAnimationEnd(animation: Animator?) {
+                    view?.visibility = visibility
+                }
+            })
+            ?.start()
+    }
+
     private fun initRecyclerView() {
         submitFlightAdapter = FlightSubmitAdapter(
             LayoutInflater.from(context),
             object : FlightSubmitAdapter.IRateActionListener {
-                override fun setRating(item: RateFlightData) {
+                override fun setRating(item: RateFlightCellData) {
                     submitViewModel.setRating(item)
                 }
             }
         )
 
-        submitViewModel.lstRatings.observe(viewLifecycleOwner, Observer { lstRating ->
-            submitFlightAdapter?.update(lstRating)
+        submitViewModel.lstRatings.observe(viewLifecycleOwner, Observer { list ->
+            Log.d("SubmitFragment","$list")
+            submitFlightAdapter?.submitList(list)
         })
 
         ratingRecyclerView?.adapter = submitFlightAdapter
@@ -209,10 +229,11 @@ class SubmitFragment : Fragment() {
 
     private fun setViewItemsToNull() {
         appBarLayout = null
+        logoIconImageView = null
         exitImageButton = null
         ratingRecyclerView = null
         submitFlightAdapter = null
-        avrRateBar = null
+        flightRateBar = null
         foodCheckBox = null
         feedbackEditText = null
         mainHeaderSubmitTextView = null

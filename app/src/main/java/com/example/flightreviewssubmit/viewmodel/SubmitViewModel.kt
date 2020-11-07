@@ -5,7 +5,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flightreviewssubmit.data.FlightData
+import com.example.flightreviewssubmit.data.RateFlightCellData
 import com.example.flightreviewssubmit.data.RateFlightData
+import com.example.flightreviewssubmit.util.RateDataFlightBuilder
 import com.example.flightreviewssubmit.util.SingleEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -26,59 +28,75 @@ class SubmitViewModel : ViewModel() {
     val isTransactionSucceed: LiveData<SingleEvent<Boolean>>
         get() = _transactionSucceed
 
-    private val _avrRating: MutableLiveData<Float> = MutableLiveData(0.0F)
-    val avrRating: LiveData<Float>
-        get() = _avrRating
+    private val _flightRating: MutableLiveData<Float> = MutableLiveData(0.0F)
+    val flightRating: LiveData<Float>
+        get() = _flightRating
 
     /**
      *  true - there was no food during flight
      *  false - there was food during flight
      */
     private val _noFood: MutableLiveData<Boolean> = MutableLiveData(false)
-    val isFood: LiveData<Boolean>
+    val isNoFood: LiveData<Boolean>
         get() = _noFood
 
     private val _feedback: MutableLiveData<String> = MutableLiveData<String>("")
     val feedback: LiveData<String>
         get() = _feedback
 
-    private val _lstRatings: MutableLiveData<List<RateFlightData>> = MutableLiveData(
+    private val _lstRatings: MutableLiveData<List<RateFlightCellData>> = MutableLiveData(
         listOf(
-            RateFlightData.RateCrowd(),
-            RateFlightData.RateFlight("aircraft"),
-            RateFlightData.RateFlight("seats"),
-            RateFlightData.RateFlight("crew"),
-            RateFlightData.RateFlight("food")
+            RateFlightCellData.RateCrowd(rating = 0.0F, enabled = true),
+            RateFlightCellData.RateFlight("aircraft", 0.0F, true),
+            RateFlightCellData.RateFlight("seats", 0.0F, true),
+            RateFlightCellData.RateFlight("crew", 0.0F, true),
+            RateFlightCellData.RateFlight("food", 0.0F, true)
         )
     )
-    val lstRatings: LiveData<List<RateFlightData>>
+    val lstRatings: LiveData<List<RateFlightCellData>>
         get() = _lstRatings
 
-    fun setRating(itemRateFlightData: RateFlightData) {
-        val positionEl = _lstRatings.value?.indexOf(itemRateFlightData)
-        if (positionEl != null)
-            _lstRatings.value?.get(positionEl)?.rating = itemRateFlightData.rating
-        countAvrRating()
+    fun setFlightRating(rating: Float){
+        _flightRating.value = rating
+    }
+
+    fun setRating(itemRateFlightCellData: RateFlightCellData) {
+        val newRating: ArrayList<RateFlightCellData> =  ArrayList()
+        for (el in _lstRatings.value!!) {
+            if (el.header == itemRateFlightCellData.header)
+                newRating.add(itemRateFlightCellData)
+            else
+                newRating.add(el)
+        }
+        _lstRatings.value = newRating
     }
 
     fun setIsFood(food: Boolean) {
+        if (food)
+            removeFoodRating()
+        else
+            addFoodRating()
         _noFood.value = food
+    }
+
+    private fun addFoodRating(){
+        val newRating = ArrayList<RateFlightCellData>()
+        newRating.addAll(_lstRatings.value!!)
+        newRating.add(RateFlightCellData.RateFlight("food", 0.0F, !_loading.value!!))
+        _lstRatings.value = newRating
+    }
+
+    private fun removeFoodRating(){
+        val newRating = ArrayList<RateFlightCellData>()
+        for (el in _lstRatings.value!!) {
+            if (el.header != "food")
+                newRating.add(el)
+        }
+        _lstRatings.value = newRating
     }
 
     fun setFeedback(feedback: String) {
         _feedback.value = feedback
-    }
-
-    private fun countAvrRating() {
-        val lstRatings = _lstRatings.value
-        if (lstRatings != null && lstRatings.isNotEmpty()) {
-            var sum = 0.0F
-            for(item in lstRatings){
-                sum += item.rating.value.toFloat()
-            }
-            val avr: Float = (sum / lstRatings.size)
-            _avrRating.postValue(avr)
-        }
     }
 
     /**
@@ -88,10 +106,10 @@ class SubmitViewModel : ViewModel() {
     suspend fun onDataSubmitClick() {
         viewModelScope.launch(Dispatchers.IO) {
             _loading.postValue(true)
-            val lstRating = getLstRatingForTransfer()
+            val result = getLstRatingForTransfer()
             _loading.postValue(false)
 
-            _flightResults.postValue(SingleEvent(FlightData(lstRating, feedback.value!!)))
+            _flightResults.postValue(SingleEvent(result))
             _transactionSucceed.postValue(SingleEvent(true))
         }
     }
@@ -100,24 +118,15 @@ class SubmitViewModel : ViewModel() {
      * Transform _lstRatings.value. If there was no food in flight, then this rating become null,
      * otherwise do not transform list.
      */
-    private suspend fun getLstRatingForTransfer(): ArrayList<RateFlightData?> {
+    private suspend fun getLstRatingForTransfer(): FlightData {
         delay(4000)
         return withContext(Dispatchers.Default) {
-            val result = ArrayList<RateFlightData?>()
-            _lstRatings.value?.let {
-                if (_noFood.value == true)  {
-                    for (el in it){
-                        if (el.header != "food")
-                            result.add(el)
-                        else
-                            result.add(null)
-                    }
-                }
-                else {
-                    result.addAll(it)
-                }
-            }
-            result
+            RateDataFlightBuilder.build(
+                _lstRatings.value,
+                _flightRating.value,
+                _noFood.value,
+                _feedback.value
+            )
         }
     }
 }
