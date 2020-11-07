@@ -6,13 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flightreviewssubmit.data.FlightData
 import com.example.flightreviewssubmit.data.RateFlightCellData
-import com.example.flightreviewssubmit.data.RateFlightData
 import com.example.flightreviewssubmit.util.RateDataFlightBuilder
 import com.example.flightreviewssubmit.util.SingleEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.FieldPosition
 
 class SubmitViewModel : ViewModel() {
 
@@ -60,14 +60,25 @@ class SubmitViewModel : ViewModel() {
         _flightRating.value = rating
     }
 
-    fun setRating(itemRateFlightCellData: RateFlightCellData) {
+    fun setRating(position: Int, rating: Float) {
         val newRating: ArrayList<RateFlightCellData> =  ArrayList()
-        for (el in _lstRatings.value!!) {
-            if (el.header == itemRateFlightCellData.header)
-                newRating.add(itemRateFlightCellData)
-            else
-                newRating.add(el)
+        newRating.addAll(_lstRatings.value!!.subList(0, position))
+        when (_lstRatings.value!![position]) {
+            is RateFlightCellData.RateCrowd -> newRating.add(
+                RateFlightCellData.RateCrowd(
+                    rating = rating,
+                    enabled = !_loading.value!!
+                )
+            )
+            is RateFlightCellData.RateFlight -> newRating.add(
+                RateFlightCellData.RateFlight(
+                    _lstRatings.value!![position].header,
+                    rating,
+                    !_loading.value!!
+                )
+            )
         }
+        newRating.addAll(_lstRatings.value!!.subList(position + 1, _lstRatings.value!!.size))
         _lstRatings.value = newRating
     }
 

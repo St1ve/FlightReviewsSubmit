@@ -20,7 +20,7 @@ sealed class RateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
         init {
             crowdRateBar.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener {
                     _, rating, _ ->
-                action.setRating(RateFlightCellData.RateCrowd("crowd", rating, crowdRateBar.isEnabled))
+                action.setRating(adapterPosition, rating)
             }
         }
 
@@ -43,9 +43,7 @@ sealed class RateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
         init {
             rateBar.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener {
                     _, rating, _ ->
-                var header = headerTextView.text
-                header = header.subSequence(header.lastIndexOf(' ') + 1, header.lastIndex)
-                action.setRating(RateFlightCellData.RateFlight(header.toString(), rating, rateBar.isEnabled))
+                action.setRating(adapterPosition, rating)
             }
         }
 

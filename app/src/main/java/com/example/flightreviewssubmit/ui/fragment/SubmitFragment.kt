@@ -187,8 +187,8 @@ class SubmitFragment : Fragment() {
         submitFlightAdapter = FlightSubmitAdapter(
             LayoutInflater.from(context),
             object : FlightSubmitAdapter.IRateActionListener {
-                override fun setRating(item: RateFlightCellData) {
-                    submitViewModel.setRating(item)
+                override fun setRating(itemPosition: Int, rate: Float) {
+                    submitViewModel.setRating(itemPosition, rate)
                 }
             }
         )

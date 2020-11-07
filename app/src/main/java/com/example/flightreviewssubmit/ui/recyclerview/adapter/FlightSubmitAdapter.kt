@@ -59,11 +59,11 @@ class FlightSubmitAdapter(
                 override fun areContentsTheSame(
                     oldItem: RateFlightCellData,
                     newItem: RateFlightCellData
-                ): Boolean = oldItem.equals(newItem)
+                ): Boolean = oldItem == newItem
         }
     }
 
     interface IRateActionListener {
-        fun setRating(item: RateFlightCellData)
+        fun setRating(itemPosition: Int, rate: Float)
     }
 }
