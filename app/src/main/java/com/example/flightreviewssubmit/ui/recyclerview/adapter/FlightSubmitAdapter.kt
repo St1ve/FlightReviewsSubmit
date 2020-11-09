@@ -5,17 +5,30 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.example.flightreviewssubmit.R
-import com.example.flightreviewssubmit.data.RateFlightCellData
+import com.example.flightreviewssubmit.data.AbsRateFlightCell
 import com.example.flightreviewssubmit.ui.recyclerview.viewholder.RateViewHolder
 
 class FlightSubmitAdapter(
     private val inflater: LayoutInflater,
     private val rateListActionListener: IRateActionListener
-) : ListAdapter<RateFlightCellData, RateViewHolder>(DIFF_CALLBACK) {
+) : ListAdapter<AbsRateFlightCell, RateViewHolder>(DIFF_CALLBACK) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RateViewHolder {
-        return when (viewType) {
-            RateFlightCellData.RATE_CROWDED_VIEW -> {
+    private enum class ViewType {
+        CUSTOM_RATE,
+        RATE
+    }
+
+    private val AbsRateFlightCell.viewType: ViewType
+        get() = when(this) {
+            is AbsRateFlightCell.RateCrowd -> ViewType.CUSTOM_RATE
+            is AbsRateFlightCell.RateFlight -> ViewType.RATE
+        }
+
+    private val viewTypesValues = ViewType.values()
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewTypeOrdinal: Int): RateViewHolder {
+        return when (viewTypesValues[viewTypeOrdinal]) {
+            ViewType.CUSTOM_RATE -> {
                 val itemView = inflater.inflate(
                     R.layout.item_rate_crowded,
                     parent,
@@ -23,7 +36,7 @@ class FlightSubmitAdapter(
                 )
                 RateViewHolder.RateCrowdedViewHolder(itemView, rateListActionListener)
             }
-            RateFlightCellData.RATE_FLIGHT_VIEW -> {
+            ViewType.RATE -> {
                 val itemView = inflater.inflate(
                     R.layout.item_rate_flight,
                     parent,
@@ -31,7 +44,6 @@ class FlightSubmitAdapter(
                 )
                 RateViewHolder.RateFlightViewHolder(itemView, rateListActionListener)
             }
-            else -> throw UnsupportedOperationException("Unknown view")
         }
     }
 
@@ -40,25 +52,25 @@ class FlightSubmitAdapter(
         holder.bind(data)
     }
 
-    override fun getItemViewType(position: Int): Int = getItem(position).getType()
+    override fun getItemViewType(position: Int): Int = getItem(position).viewType.ordinal
 
     companion object {
         private val DIFF_CALLBACK = object : DiffUtil
-            .ItemCallback<RateFlightCellData>() {
+            .ItemCallback<AbsRateFlightCell>() {
                 override fun areItemsTheSame(
-                    oldItem: RateFlightCellData,
-                    newItem: RateFlightCellData
+                    oldItem: AbsRateFlightCell,
+                    newItem: AbsRateFlightCell
                 ): Boolean {
-                    return (oldItem is RateFlightCellData.RateCrowd &&
-                            newItem is RateFlightCellData.RateCrowd ||
-                            oldItem is RateFlightCellData.RateFlight &&
-                            newItem is RateFlightCellData.RateFlight &&
+                    return ((oldItem is AbsRateFlightCell.RateCrowd &&
+                            newItem is AbsRateFlightCell.RateCrowd ||
+                            oldItem is AbsRateFlightCell.RateFlight &&
+                            newItem is AbsRateFlightCell.RateFlight) &&
                             oldItem.header == newItem.header)
                 }
 
                 override fun areContentsTheSame(
-                    oldItem: RateFlightCellData,
-                    newItem: RateFlightCellData
+                    oldItem: AbsRateFlightCell,
+                    newItem: AbsRateFlightCell
                 ): Boolean = oldItem == newItem
         }
     }

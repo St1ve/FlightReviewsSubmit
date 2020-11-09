@@ -6,13 +6,13 @@ import androidx.appcompat.widget.AppCompatRatingBar
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flightreviewssubmit.R
-import com.example.flightreviewssubmit.data.RateFlightCellData
+import com.example.flightreviewssubmit.data.AbsRateFlightCell
 import com.example.flightreviewssubmit.ui.recyclerview.adapter.FlightSubmitAdapter
 import java.lang.UnsupportedOperationException
 
 sealed class RateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     abstract fun bind(
-        data: RateFlightCellData)
+        data: AbsRateFlightCell)
 
     class RateCrowdedViewHolder(itemView: View, action: FlightSubmitAdapter.IRateActionListener) : RateViewHolder(itemView){
         private val crowdRateBar: AppCompatRatingBar = itemView.findViewById(R.id.crowd_rate_bar)
@@ -25,9 +25,9 @@ sealed class RateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
         }
 
         override fun bind(
-            data: RateFlightCellData
+            data: AbsRateFlightCell
         ) {
-            if (data !is RateFlightCellData.RateCrowd)
+            if (data !is AbsRateFlightCell.RateCrowd)
                 throw UnsupportedOperationException("Unsupported data. " +
                         "Data have to be type: RateFlightData.RateFlight")
 
@@ -48,9 +48,9 @@ sealed class RateViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) 
         }
 
         override fun bind(
-            data: RateFlightCellData
+            data: AbsRateFlightCell
         ) {
-            if (data !is RateFlightCellData.RateFlight)
+            if (data !is AbsRateFlightCell.RateFlight)
                 throw UnsupportedOperationException("Unsupported data." +
                         " Data have to be type: RateFlightData.RateFlight")
 

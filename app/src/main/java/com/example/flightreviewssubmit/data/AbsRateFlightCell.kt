@@ -8,37 +8,33 @@ package com.example.flightreviewssubmit.data
  *  @param rating  Float. Store grade of rating
  *  @param enabled  Boolean, false - ratingBar is enabled. true - ratingBar is disabled
  */
-sealed class RateFlightCellData(
+sealed class AbsRateFlightCell(
     open val header: String,
     open val rating: Float,
     open val enabled: Boolean) {
-
-    companion object {
-        const val RATE_CROWDED_VIEW = 0
-        const val RATE_FLIGHT_VIEW = 1
-    }
-
-    abstract fun getType(): Int
 
     class RateCrowd(
         override val header: String = "crowd",
         override val rating: Float,
         override val enabled: Boolean
-    ) : RateFlightCellData(header, rating, enabled) {
-        override fun getType(): Int {
-            return RATE_CROWDED_VIEW
-        }
-
-        override fun equals(other: Any?): Boolean {
-            if (other is RateCrowd && other.header == this.header && other.rating == this.rating)
-                return true
-            return false
-        }
-
+    ) : AbsRateFlightCell(header, rating, enabled) {
         override fun hashCode(): Int {
             var result = header.hashCode()
             result = 31 * result + rating.hashCode()
             return result
+        }
+
+        override fun equals(other: Any?): Boolean {
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as RateCrowd
+
+            if (header != other.header) return false
+            if (rating != other.rating) return false
+            if (enabled != other.enabled) return false
+
+            return true
         }
     }
 
@@ -46,15 +42,18 @@ sealed class RateFlightCellData(
         override val header: String,
         override val rating: Float,
         override val enabled: Boolean
-    ) : RateFlightCellData(header, rating, enabled) {
-        override fun getType(): Int {
-            return RATE_FLIGHT_VIEW
-        }
-
+    ) : AbsRateFlightCell(header, rating, enabled) {
         override fun equals(other: Any?): Boolean {
-            if (other is RateFlight && other.header == this.header && other.rating == this.rating)
-                return true
-            return false
+            if (this === other) return true
+            if (javaClass != other?.javaClass) return false
+
+            other as RateFlight
+
+            if (header != other.header) return false
+            if (rating != other.rating) return false
+            if (enabled != other.enabled) return false
+
+            return true
         }
 
         override fun hashCode(): Int {

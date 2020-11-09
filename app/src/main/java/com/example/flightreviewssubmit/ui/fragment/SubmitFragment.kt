@@ -7,7 +7,6 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -24,15 +23,15 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.flightreviewssubmit.R
-import com.example.flightreviewssubmit.data.RateFlightCellData
+import com.example.flightreviewssubmit.data.AbsRateFlightCell
+import com.example.flightreviewssubmit.data.Action
+import com.example.flightreviewssubmit.data.ViewState
 import com.example.flightreviewssubmit.ui.recyclerview.adapter.FlightSubmitAdapter
 import com.example.flightreviewssubmit.viewmodel.SubmitViewModel
 import com.google.android.material.appbar.AppBarLayout
-import kotlinx.coroutines.*
 
 class SubmitFragment : Fragment() {
 
@@ -69,7 +68,6 @@ class SubmitFragment : Fragment() {
         initUiElements(view)
         initObservers()
         initListeners()
-        initRecyclerView()
     }
 
     private fun initUiElements(view: View) {
@@ -88,117 +86,108 @@ class SubmitFragment : Fragment() {
     }
 
     private fun initObservers() {
-        submitViewModel.isTransactionSucceed.observe(viewLifecycleOwner, Observer {
-            if (it.getContentIfNotHandled() == true)
-                findNavController().navigate(R.id.action_submitFragment_to_successFragment)
+        submitViewModel.state.observe(viewLifecycleOwner, Observer { state ->
+            setUpRecyclerView(state.cells)
+            submitButton?.visibility = if (state.viewState is ViewState.Active)
+                View.VISIBLE
+            else
+                View.GONE
+            render(state.viewState)
         })
+    }
 
-        submitViewModel.flightRating.observe(viewLifecycleOwner, Observer {
-            // -1 cause rating range(1,6)
-            flightRateBar?.rating = it
-        })
-
-        submitViewModel.isNoFood.observe(viewLifecycleOwner, Observer {
-            foodCheckBox?.isChecked = it
-        })
-
-        submitViewModel.feedback.observe(viewLifecycleOwner, Observer {
-            //Check, if text the same to prevent circle with calls setText().
-            if (it != feedbackEditText?.text.toString())
-                feedbackEditText?.setText(it)
-        })
-
-        submitViewModel.isLoading.observe(viewLifecycleOwner, Observer {
-            feedbackEditText?.isEnabled = !it
-            foodCheckBox?.isEnabled = !it
-
-            if (it == true) {
-                submitButton?.visibility = View.GONE
-                submitProgressBar?.visibility = View.VISIBLE
-            } else {
+    private fun render(state: ViewState) {
+        when(state) {
+            is ViewState.Active -> {
                 submitButton?.visibility = View.VISIBLE
                 submitProgressBar?.visibility = View.GONE
+                flightRateBar?.isEnabled = true
+                flightRateBar?.isEnabled = true
+                foodCheckBox?.isEnabled = true
+                feedbackEditText?.isEnabled = true
             }
-        })
+            is ViewState.Loading -> {
+                submitButton?.visibility = View.GONE
+                submitProgressBar?.visibility = View.VISIBLE
+                flightRateBar?.isEnabled = false
+                foodCheckBox?.isEnabled = false
+                feedbackEditText?.isEnabled = false
+            }
+            is ViewState.Succeed -> {
+                Toast.makeText(context, state.data.toString(), Toast.LENGTH_SHORT).show()
+                findNavController().navigate(R.id.action_submitFragment_to_successFragment)
+            }
+        }
+    }
 
-        submitViewModel.flightResult.observe(viewLifecycleOwner, Observer {
-            it.getContentIfNotHandled()?.let { flightData ->
-                Toast.makeText(context, "$flightData", Toast.LENGTH_SHORT).show()
-            }
-        })
+    private fun setUpRecyclerView(cells: List<AbsRateFlightCell>) {
+        if (cells.isNullOrEmpty()) {
+            submitViewModel.setAction(Action.InitCells)
+            return
+        }
+        val adapter = ratingRecyclerView?.adapter
+        if (adapter == null) {
+            val myAdapter = FlightSubmitAdapter(
+                LayoutInflater.from(context),
+                object : FlightSubmitAdapter.IRateActionListener {
+                    override fun setRating(itemPosition: Int, rate: Float) {
+                        submitViewModel.setAction(Action.SetRating(itemPosition, rate))
+                    }
+                })
+            ratingRecyclerView?.adapter = myAdapter
+            myAdapter.submitList(cells)
+        } else {
+            val myAdapter = adapter as FlightSubmitAdapter
+            myAdapter.submitList(cells)
+        }
+    }
+
+    private fun setUpAppBar(visibility: Int) {
+        val alpha = if (visibility == View.VISIBLE) 1f else 0f
+        transitionYAnim(mainHeaderSubmitTextView, alpha, visibility)
+        transitionYAnim(infoRaceDateSubmitTextView, alpha, visibility)
+        transitionYAnim(infoDirectionSubmitTextView, alpha, visibility)
+        transitionYAnim(flightRateBar, alpha, visibility)
     }
 
     private fun initListeners() {
-        appBarLayout?.addOnOffsetChangedListener(
-            AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-                if (appBarLayout.totalScrollRange + verticalOffset < 400) {
-                    transitionYAnim(mainHeaderSubmitTextView, 0f, View.GONE)
-                    transitionYAnim(infoRaceDateSubmitTextView, 0f, View.GONE)
-                    transitionYAnim(infoDirectionSubmitTextView, 0f, View.GONE)
-                    transitionYAnim(flightRateBar, 0f, View.GONE)
-                }
-                else {
-                    transitionYAnim(mainHeaderSubmitTextView,1f, View.VISIBLE)
-                    transitionYAnim(infoRaceDateSubmitTextView,1f, View.VISIBLE)
-                    transitionYAnim(infoDirectionSubmitTextView,1f, View.VISIBLE)
-                    transitionYAnim(flightRateBar,1f, View.VISIBLE)
-                }
-            }
-        )
-
-
-        flightRateBar?.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener {
-                _, rating, _ ->
-            submitViewModel.setFlightRating(rating)
-        }
-
         exitImageButton?.setOnClickListener {
             showQuitDialog()
         }
-
-        foodCheckBox?.setOnClickListener {
-            submitViewModel.setIsFood(foodCheckBox!!.isChecked)
-        }
-
-        feedbackEditText?.doOnTextChanged { text, _, _, _ ->
-            submitViewModel.setFeedback(text.toString())
-        }
-
-        submitButton?.setOnClickListener {
-            lifecycleScope.launch {
-                submitViewModel.onDataSubmitClick()
+        appBarLayout?.addOnOffsetChangedListener(
+            AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
+                if (appBarLayout.totalScrollRange + verticalOffset < 400) {
+                    setUpAppBar(View.GONE)
+                } else {
+                    setUpAppBar(View.VISIBLE)
+                }
             }
+        )
+        flightRateBar?.onRatingBarChangeListener = RatingBar.OnRatingBarChangeListener {
+                _, rating, _ ->
+            submitViewModel.setAction(Action.UpdateFlightRating(rating))
+        }
+        foodCheckBox?.setOnClickListener {
+            submitViewModel.setAction(Action.UpdateFoodStatus(foodCheckBox!!.isChecked))
+        }
+        feedbackEditText?.doOnTextChanged { text, _, _, _ ->
+            submitViewModel.setAction(Action.UpdateFeedBack(text.toString()))
+        }
+        submitButton?.setOnClickListener {
+            submitViewModel.setAction(Action.OnSubmitClickListener)
         }
     }
 
-    private fun transitionYAnim(view: View?, alpha: Float, visibility: Int){
+    private fun transitionYAnim(view: View?, alpha: Float, visibility: Int) {
         view?.animate()
             ?.setDuration(300)
             ?.alpha(alpha)
             ?.setListener(object : AnimatorListenerAdapter() {
                 override fun onAnimationEnd(animation: Animator?) {
-                    view?.visibility = visibility
+                    view.visibility = visibility
                 }
             })
             ?.start()
-    }
-
-    private fun initRecyclerView() {
-        submitFlightAdapter = FlightSubmitAdapter(
-            LayoutInflater.from(context),
-            object : FlightSubmitAdapter.IRateActionListener {
-                override fun setRating(itemPosition: Int, rate: Float) {
-                    submitViewModel.setRating(itemPosition, rate)
-                }
-            }
-        )
-
-        submitViewModel.lstRatings.observe(viewLifecycleOwner, Observer { list ->
-            Log.d("SubmitFragment","$list")
-            submitFlightAdapter?.submitList(list)
-        })
-
-        ratingRecyclerView?.adapter = submitFlightAdapter
     }
 
     /**
@@ -211,6 +200,7 @@ class SubmitFragment : Fragment() {
         if (view !is AppCompatEditText) {
             view.setOnTouchListener { _, _ ->
                 activity?.hideSoftKeyboard()
+                feedbackEditText?.clearFocus()
                 false
             }
         }
@@ -247,7 +237,8 @@ class SubmitFragment : Fragment() {
         currentFocus?.let {
             val inputMethodManager = ContextCompat.getSystemService(
                 this,
-                InputMethodManager::class.java)!!
+                InputMethodManager::class.java
+            )!!
             inputMethodManager.hideSoftInputFromWindow(it.windowToken, 0)
         }
     }
@@ -257,11 +248,13 @@ class SubmitFragment : Fragment() {
 
         val actionCancel = DialogInterface.OnClickListener { dialog, _ -> dialog.dismiss() }
 
-        val actionAccept = DialogInterface.OnClickListener { _, _ -> activity?.let {
-            finishAffinity(
-                it
-            )
-        } }
+        val actionAccept = DialogInterface.OnClickListener { _, _ ->
+            activity?.let {
+                finishAffinity(
+                    it
+                )
+            }
+        }
 
         alertDialogBuilder.setMessage(getString(R.string.alert_dialog_quit_message))
         alertDialogBuilder.setTitle(getString(R.string.alert_dialog_quit_title))

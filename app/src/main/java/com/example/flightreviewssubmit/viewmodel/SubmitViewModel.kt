@@ -4,124 +4,126 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.flightreviewssubmit.data.FlightData
-import com.example.flightreviewssubmit.data.RateFlightCellData
+import com.example.flightreviewssubmit.data.*
 import com.example.flightreviewssubmit.util.RateDataFlightBuilder
-import com.example.flightreviewssubmit.util.SingleEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.text.FieldPosition
 
 class SubmitViewModel : ViewModel() {
 
-    private val _flightResults: MutableLiveData<SingleEvent<FlightData>> = MutableLiveData()
-    val flightResult : LiveData<SingleEvent<FlightData>>
-        get() = _flightResults
+    companion object{
+        private val _state: MutableLiveData<SubmitState> = MutableLiveData(SubmitState.newEmpty())
+        fun reset() {
+            _state.value = SubmitState.newEmpty()
+        }
+    }
+    val state: LiveData<SubmitState>
+        get() = _state
 
-    private val _loading: MutableLiveData<Boolean> = MutableLiveData(false)
-    val isLoading: LiveData<Boolean>
-        get() = _loading
-
-    private val _transactionSucceed: MutableLiveData<SingleEvent<Boolean>> = MutableLiveData(SingleEvent(false))
-    val isTransactionSucceed: LiveData<SingleEvent<Boolean>>
-        get() = _transactionSucceed
-
-    private val _flightRating: MutableLiveData<Float> = MutableLiveData(0.0F)
-    val flightRating: LiveData<Float>
-        get() = _flightRating
-
-    /**
-     *  true - there was no food during flight
-     *  false - there was food during flight
-     */
-    private val _noFood: MutableLiveData<Boolean> = MutableLiveData(false)
-    val isNoFood: LiveData<Boolean>
-        get() = _noFood
-
-    private val _feedback: MutableLiveData<String> = MutableLiveData<String>("")
-    val feedback: LiveData<String>
-        get() = _feedback
-
-    private val _lstRatings: MutableLiveData<List<RateFlightCellData>> = MutableLiveData(
-        listOf(
-            RateFlightCellData.RateCrowd(rating = 0.0F, enabled = true),
-            RateFlightCellData.RateFlight("aircraft", 0.0F, true),
-            RateFlightCellData.RateFlight("seats", 0.0F, true),
-            RateFlightCellData.RateFlight("crew", 0.0F, true),
-            RateFlightCellData.RateFlight("food", 0.0F, true)
-        )
-    )
-    val lstRatings: LiveData<List<RateFlightCellData>>
-        get() = _lstRatings
-
-    fun setFlightRating(rating: Float){
-        _flightRating.value = rating
+    fun setAction(action: Action) {
+        when (action) {
+            is Action.InitCells -> {
+                _state.value = _state.value!!.copy( cells =
+                    arrayListOf(
+                        AbsRateFlightCell.RateCrowd(rating = 0.0F, enabled = true),
+                        AbsRateFlightCell.RateFlight("aircraft", 0.0F, true),
+                        AbsRateFlightCell.RateFlight("seats", 0.0F, true),
+                        AbsRateFlightCell.RateFlight("crew", 0.0F, true),
+                        AbsRateFlightCell.RateFlight("food", 0.0F, true)
+                    )
+                )
+            }
+            is Action.UpdateFoodStatus -> {
+                updateFoodStatus(action)
+            }
+            is Action.UpdateFeedBack -> {
+                _state.value = _state.value!!.copy(feedback = action.feedback)
+            }
+            is Action.UpdateFlightRating -> {
+                _state.value = _state.value!!.copy(flightRating = action.rating)
+            }
+            is Action.SetRating -> {
+                setNewCellRating(action.position, action.rating)
+            }
+            is Action.OnSubmitClickListener -> {
+                onSubmitClick()
+            }
+        }
     }
 
-    fun setRating(position: Int, rating: Float) {
-        val newRating: ArrayList<RateFlightCellData> =  ArrayList()
-        newRating.addAll(_lstRatings.value!!.subList(0, position))
-        when (_lstRatings.value!![position]) {
-            is RateFlightCellData.RateCrowd -> newRating.add(
-                RateFlightCellData.RateCrowd(
-                    rating = rating,
-                    enabled = !_loading.value!!
-                )
-            )
-            is RateFlightCellData.RateFlight -> newRating.add(
-                RateFlightCellData.RateFlight(
-                    _lstRatings.value!![position].header,
-                    rating,
-                    !_loading.value!!
+    private fun updateFoodStatus(action: Action.UpdateFoodStatus) {
+        val newCells = ArrayList<AbsRateFlightCell>()
+        if (action.noFood) {
+            _state.value!!.cells.forEach {
+                if (it.header != "food")
+                    newCells.add(it)
+            }
+        } else {
+            newCells.addAll(_state.value!!.cells)
+            newCells.add(
+                AbsRateFlightCell.RateFlight(
+                    "food",
+                    0f,
+                    true
                 )
             )
         }
-        newRating.addAll(_lstRatings.value!!.subList(position + 1, _lstRatings.value!!.size))
-        _lstRatings.value = newRating
+        _state.value = _state.value!!.copy(noFood = action.noFood, cells = newCells)
     }
 
-    fun setIsFood(food: Boolean) {
-        if (food)
-            removeFoodRating()
+    private fun getListEnabledElements(enabled: Boolean) : ArrayList<AbsRateFlightCell> {
+        val newCells = ArrayList<AbsRateFlightCell>()
+        _state.value!!.cells.forEach {
+            when (it) {
+                is AbsRateFlightCell.RateCrowd -> {
+                    newCells.add(
+                        AbsRateFlightCell.RateCrowd(
+                            rating = it.rating,
+                            enabled = enabled
+                        )
+                    )
+                }
+                is AbsRateFlightCell.RateFlight -> {
+                    newCells.add(
+                        AbsRateFlightCell.RateFlight(
+                            header = it.header,
+                            rating = it.rating,
+                            enabled = enabled
+                        )
+                    )
+                }
+            }
+        }
+        return newCells
+    }
+
+    private fun setNewCellRating(position: Int, rating: Float) {
+        val oldItem = _state.value!!.cells[position]
+        if (oldItem is AbsRateFlightCell.RateCrowd)
+            _state.value!!.cells[position] = AbsRateFlightCell.RateCrowd(oldItem.header, rating, oldItem.enabled)
         else
-            addFoodRating()
-        _noFood.value = food
-    }
-
-    private fun addFoodRating(){
-        val newRating = ArrayList<RateFlightCellData>()
-        newRating.addAll(_lstRatings.value!!)
-        newRating.add(RateFlightCellData.RateFlight("food", 0.0F, !_loading.value!!))
-        _lstRatings.value = newRating
-    }
-
-    private fun removeFoodRating(){
-        val newRating = ArrayList<RateFlightCellData>()
-        for (el in _lstRatings.value!!) {
-            if (el.header != "food")
-                newRating.add(el)
-        }
-        _lstRatings.value = newRating
-    }
-
-    fun setFeedback(feedback: String) {
-        _feedback.value = feedback
+            _state.value!!.cells[position] = AbsRateFlightCell.RateFlight(oldItem.header, rating, oldItem.enabled)
     }
 
     /**
      * Preparing data for transfer (showing)
      * Set _transactionSucceed to true if data "saving in room" was succeed
      */
-    suspend fun onDataSubmitClick() {
+    private fun onSubmitClick() {
+        _state.value = _state.value!!.copy(
+            viewState = ViewState.Loading,
+            cells = getListEnabledElements(false)
+        )
         viewModelScope.launch(Dispatchers.IO) {
-            _loading.postValue(true)
             val result = getLstRatingForTransfer()
-            _loading.postValue(false)
-
-            _flightResults.postValue(SingleEvent(result))
-            _transactionSucceed.postValue(SingleEvent(true))
+            _state.postValue(
+                _state.value!!.copy(
+                    viewState = ViewState.Succeed(result),
+                    cells = getListEnabledElements(true)
+                )
+            )
         }
     }
 
@@ -133,10 +135,10 @@ class SubmitViewModel : ViewModel() {
         delay(4000)
         return withContext(Dispatchers.Default) {
             RateDataFlightBuilder.build(
-                _lstRatings.value,
-                _flightRating.value,
-                _noFood.value,
-                _feedback.value
+                _state.value!!.cells,
+                _state.value!!.flightRating,
+                _state.value!!.noFood,
+                _state.value!!.feedback
             )
         }
     }

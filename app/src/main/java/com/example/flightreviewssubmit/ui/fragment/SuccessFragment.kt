@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.navigation.fragment.findNavController
 import com.example.flightreviewssubmit.R
+import com.example.flightreviewssubmit.viewmodel.SubmitViewModel
 
 
 class SuccessFragment : Fragment() {
@@ -26,6 +27,7 @@ class SuccessFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         closeImageButton = view.findViewById(R.id.exit_success_image_button)
+        SubmitViewModel.reset()
 
         closeImageButton.setOnClickListener {
             findNavController().navigateUp()
