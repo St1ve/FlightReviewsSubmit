@@ -1,0 +1,33 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.FlightReviewsSubmit" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/purple_500</item>
+        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_700</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="RatingBarStars" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressTint">@color/yellow</item>
+        <item name="android:progressBackgroundTint">@color/grey</item>
+    </style>
+
+    <style name="RatingCrowdBarStars" parent="@android:style/Widget.RatingBar">
+        <item name="android:minHeight">34dp</item>
+        <item name="android:minWidth">34dp</item>
+        <item name="android:progressDrawable">@drawable/rating_bar_crowd</item>
+    </style>
+
+    <style name="SubmitActionBar" parent="Base.Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/dark_blue</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+</resources>
