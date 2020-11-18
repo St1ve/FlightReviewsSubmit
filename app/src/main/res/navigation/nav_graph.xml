@@ -8,7 +8,7 @@
         android:id="@+id/submitFragment"
         android:name="com.example.flightreviewssubmit.ui.fragment.SubmitFragment"
         android:label="submit_fragment"
-        tools:layout="@layout/submit_fragment" >
+        tools:layout="@layout/fragment_submit" >
         <action
             android:id="@+id/action_submitFragment_to_successFragment"
             app:destination="@id/successFragment" />

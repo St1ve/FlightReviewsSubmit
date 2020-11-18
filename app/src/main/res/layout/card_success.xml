@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/info_rate_card_view"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/small_margin"
+    app:cardBackgroundColor="@color/grey"
+    tools:layout_width="wrap_content">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="140dp">
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/left_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="16dp" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/info_flight_success_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="American Airlines, AA 1487"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/info_average_rate_text_view"
+            app:layout_constraintStart_toStartOf="@id/left_guideline"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/info_average_rate_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/avr_rating_shape"
+            android:text="5,0"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/info_rate_aircraft_text_view"
+            app:layout_constraintStart_toStartOf="@id/left_guideline"
+            app:layout_constraintTop_toBottomOf="@id/info_flight_success_text_view" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/info_rate_aircraft_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="5.0 Aircraft"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/info_rate_crew_text_view"
+            app:layout_constraintStart_toStartOf="@id/left_guideline"
+            app:layout_constraintTop_toBottomOf="@id/info_average_rate_text_view" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/info_rate_crew_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="4.8 Crew"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/info_rate_seats_text_view"
+            app:layout_constraintStart_toStartOf="@+id/left_guideline"
+            app:layout_constraintTop_toBottomOf="@id/info_rate_aircraft_text_view" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/info_rate_seats_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="5.0 Seats"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@id/left_guideline"
+            app:layout_constraintTop_toBottomOf="@id/info_rate_crew_text_view" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/info_rate_flight_experience_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:text="4.2 Flight experience"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@id/info_rate_aircraft_text_view"
+            app:layout_constraintTop_toTopOf="@id/info_rate_aircraft_text_view" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/info_rate_food_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="5.0 Aircraft"
+            android:textAlignment="textStart"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/right_guideline"
+            app:layout_constraintStart_toStartOf="@+id/info_rate_flight_experience_text_view"
+            app:layout_constraintTop_toBottomOf="@id/info_rate_flight_experience_text_view" />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/right_guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintGuide_begin="363dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
