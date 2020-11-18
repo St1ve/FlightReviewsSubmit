@@ -6,9 +6,10 @@
     android:id="@+id/info_rate_card_view"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/small_margin"
     app:cardBackgroundColor="@color/grey"
-    tools:layout_width="wrap_content">
+    tools:layout_height="wrap_content"
+    tools:layout_margin="@dimen/small_margin"
+    tools:layout_width="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
